@@ -65,7 +65,7 @@ export const AchievementSection = ({ achievements, accentColor }) => (
 );
 
 export const SkillSection = ({ skills, techStack, accentColor }) => {
-  // ✅ If AI categorized data exists → show TECH STACK
+  //  If AI categorized data exists → show TECH STACK
   if (techStack) {
     return (
       <div className="space-y-2 text-sm">
@@ -90,7 +90,6 @@ export const SkillSection = ({ skills, techStack, accentColor }) => {
     );
   }
 
-  //  Fallback (NO progress, just clean list)
   return (
     <p className="text-sm text-gray-700">
       {skills

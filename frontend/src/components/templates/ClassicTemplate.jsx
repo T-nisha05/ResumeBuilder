@@ -11,10 +11,6 @@ const ClassicTemplate = ({ data, accentColor }) => {
       month: "short",
     });
   };
-  
-console.log("TECH STACK DATA:", data.techStack);
-console.log("Card Data:", data);
-
 
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white text-gray-800">
@@ -103,28 +99,56 @@ console.log("Card Data:", data);
       </header>
 
       {/* SUMMARY */}
-      {data.professional_summary && (
+      {data?.professional_summary && (
         <section className="mb-4">
-          <h2 className="font-semibold mb-2">Summary</h2>
+          <h2 className="font-semibold mb-2">Objective</h2>
           <p>{data.professional_summary}</p>
         </section>
       )}
 
       {/* EXPERIENCE */}
-      <section className="mb-4">
-        <h2 className="font-semibold mb-2">Experience</h2>
-        {data.experience?.map((exp, i) => (
-          <div key={i} className="mb-3">
+{data.experience?.some(
+  (exp) =>
+    exp.position?.trim() ||
+    exp.company?.trim() ||
+    exp.description?.trim()
+) && (
+  <section className="mb-4">
+    <h2 className="font-semibold mb-2">Experience</h2>
+
+    {data.experience
+      .filter(
+        (exp) =>
+          exp.position?.trim() ||
+          exp.company?.trim() ||
+          exp.description?.trim()
+      )
+      .map((exp, i) => (
+        <div key={i} className="mb-3">
+          {exp.position && (
             <h3 className="font-medium">{exp.position}</h3>
-            <p>{exp.company}</p>
+          )}
+
+          {exp.company && <p>{exp.company}</p>}
+
+          {(exp.start_date || exp.end_date) && (
             <p className="text-xs text-gray-500">
-              {formatDate(exp.start_date)} -{" "}
-              {exp.is_current ? "Present" : formatDate(exp.end_date)}
+              {exp.start_date && formatDate(exp.start_date)} -{" "}
+              {exp.is_current
+                ? "Present"
+                : exp.end_date && formatDate(exp.end_date)}
             </p>
-            <p className="whitespace-pre-line">{exp.description}</p>
-          </div>
-        ))}
-      </section>
+          )}
+
+          {exp.description && (
+            <p className="whitespace-pre-line">
+              {exp.description}
+            </p>
+          )}
+        </div>
+      ))}
+  </section>
+)}
 
       {/* PROJECTS */}
       <section className="mb-4">
@@ -166,46 +190,47 @@ console.log("Card Data:", data);
         ))}
       </section>
 
-
-
-    {/* TECH STACK - SKILLS */}
-{data?.techStack &&
- Object.values(data.techStack).some(
-   (arr) => Array.isArray(arr) && arr.length > 0
- ) && (
+{/* TECH STACK */}
+{data?.techStack && (
   <section className="mb-4">
     <h2 className="font-semibold mb-2">Tech Stack</h2>
 
-    <div className="space-y-1 text-sm text-gray-800">
-      
-      {data.techStack.frontend?.length > 0 && (
+    <div className="space-y-1 text-sm text-gray-900">
+
+      {data.techStack.language?.length > 0 && (
         <p>
-          <span className="font-medium">Frontend:</span>{" "}
-          {data.techStack.frontend.join(", ")}
+          <span className="font-medium">Languages:</span>{" "}
+          {data.techStack.language.join(", ")}
         </p>
       )}
 
-      {data.techStack.backend?.length > 0 && (
+      {data.techStack.it_constructs?.length > 0 && (
         <p>
-          <span className="font-medium">Backend:</span>{" "}
-          {data.techStack.backend.join(", ")}
+          <span className="font-medium">IT Constructs:</span>{" "}
+          {data.techStack.it_constructs.join(", ")}
         </p>
       )}
 
-      {data.techStack.database?.length > 0 && (
+      {data.techStack.web_development?.length > 0 && (
         <p>
-          <span className="font-medium">Database:</span>{" "}
-          {data.techStack.database.join(", ")}
+          <span className="font-medium">Web Development:</span>{" "}
+          {data.techStack.web_development.join(", ")}
+        </p>
+      )}
+
+      {data.techStack.databases?.length > 0 && (
+        <p>
+          <span className="font-medium">Databases:</span>{" "}
+          {data.techStack.databases.join(", ")}
         </p>
       )}
 
       {data.techStack.tools?.length > 0 && (
         <p>
-          <span className="font-medium">Tools:</span>{" "}
+          <span className="font-medium">Tools & Technologies:</span>{" "}
           {data.techStack.tools.join(", ")}
         </p>
       )}
-
     </div>
   </section>
 )}

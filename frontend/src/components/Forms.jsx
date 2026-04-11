@@ -1,8 +1,7 @@
 "use client";
 
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { Input } from "./Input";
-import { RatingInput } from "./ResumeSection";
 import { Plus, Trash2, Brain, LoaderCircle } from "lucide-react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
@@ -209,7 +208,7 @@ export const ContactInfoForm = ({ contactInfo, updateSection, errors }) => {
     onChange={({ target }) => updateSection("github", target.value)}
   />
 
-  {/* LEETCODE 🔥 NEW */}
+  {/* LEETCODE */}
   <Input
     label="LeetCode"
     placeholder="https://leetcode.com/username"
@@ -359,6 +358,13 @@ export const EducationDetailsForm = ({
 export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
   const [loading, setLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState([]);
+  const [editorValue, setEditorValue] = useState("");
+
+  useEffect(() => {
+  if (profileData.summary) {
+    setEditorValue(`<p>${profileData.summary}</p>`);
+  }
+}, [profileData.summary]);
 
   const handleGenerateSummary = async () => {
     try {
@@ -372,7 +378,7 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
       - Mid-level
       - Experienced
 
-      Each should be 3-4 lines.
+      Each should be 1-2 lines.
 
       Return ONLY JSON:
       [
@@ -414,6 +420,7 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
       ["link"],
     ],
   };
+
 
   return (
     <div className={profileInfoStyles.container}>
@@ -485,14 +492,20 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
 
           {/* TEXTAREA */}
           <div className="w-full max-w-full overflow-hidden">
-            <ReactQuill
-              value={profileData.summary || ""}
-              onChange={(value) => updateSection("summary", value)}
-              modules={modules}
-              placeholder="Short introduction about yourself"
-              className="w-full"
-            />
+          <ReactQuill
+  value={editorValue}
+  onChange={(value, _d, _s, editor) => {
+    setEditorValue(value); // ✅ keep Quill working
+
+    const plainText = editor.getText().trim();
+    updateSection("summary", plainText); // ✅ store plain text
+  }}
+  modules={modules}
+  placeholder="Short introduction about yourself"
+  className="w-full"
+/>
           </div>
+
 
           {/* AI Suggestions */}
           {aiSuggestions?.length > 0 && (
@@ -503,8 +516,8 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
                 <div
                   key={index}
                   onClick={() =>
-                    updateSection("summary", `<p>${item.summary}</p>`)
-                  }
+  updateSection("summary", item.summary)
+}
                   className="p-3 border rounded-lg mt-2 cursor-pointer hover:bg-gray-100"
                 >
                   <p className="text-sm font-bold text-purple-600">
@@ -763,7 +776,8 @@ const normalizeSkills = (data = {}) => {
   const handleAutoCategorize = async () => {
   try {
     setLoadingIndex(true);
-    await new Promise((resolve) => setTimeout(resolve, 800));
+    
+    await new Promise((resolve) => setTimeout(resolve, 500));
 
     const response = await axiosInstance.post(
       API_PATHS.AI.CATEGORIZE_SKILLS,
@@ -773,8 +787,7 @@ const normalizeSkills = (data = {}) => {
     );
 
     const rawData = response?.data?.data;
-    console.log("FULL RESPONSE:", response);
-console.log("RAW DATA:", rawData);
+    console.log("ACTUAL AI DATA:", response.data);
 
     if (!rawData) {
       console.error("Invalid AI response:", response);
@@ -788,7 +801,7 @@ console.log("RAW DATA:", rawData);
 
     setResumeData((prev) => ({
   ...prev,
-  techStack: normalized,
+  techStack: rawData,
 }));
   } catch (error) {
     console.error("AI Error:", error);
@@ -863,28 +876,6 @@ console.log("RAW DATA:", rawData);
           <Plus size={16} /> Add Skill
         </button>
       </div>
-
-      {/* AI RESULT */}
-      {categorizedSkills && (
-        <div className="mt-6 p-4 border rounded-xl bg-gray-50">
-          <h3 className="font-semibold italic mb-3 text-gray-900">
-            Categorized Skills
-          </h3>
-
-          <div className="space-y-2 text-sm">
-            {Object.entries(categorizedSkills).map(([key, value]) => {
-              if (!value || value.length === 0) return null;
-
-              return (
-                <p key={key}>
-                  <strong className="capitalize">{key}:</strong>{" "}
-                  {value.join(", ")}
-                </p>
-              );
-            })}
-          </div>
-        </div>
-      )}
     </div>
   );
 };

@@ -67,7 +67,7 @@ export const transformResumeData = (resumeData) => {
     frontend: [],
     backend: [],
     database: [],
-    tools: [],
+    
 },
   };
 };

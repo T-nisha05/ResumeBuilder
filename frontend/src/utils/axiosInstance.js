@@ -10,7 +10,7 @@ const axiosInstance = axios.create({
   },
 });
 
-// ✅ REQUEST INTERCEPTOR (Attach token automatically)
+// REQUEST INTERCEPTOR (Attach token automatically)
 axiosInstance.interceptors.request.use(
   (config) => {
     const token = localStorage.getItem("token");
@@ -24,7 +24,7 @@ axiosInstance.interceptors.request.use(
   (error) => Promise.reject(error)
 );
 
-// ✅ RESPONSE INTERCEPTOR (Handle errors globally)
+//  RESPONSE INTERCEPTOR (Handle errors globally)
 axiosInstance.interceptors.response.use(
   (response) => response,
 

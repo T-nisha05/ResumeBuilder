@@ -45,7 +45,7 @@ app.use(
 
 app.post("/generate-summary", async (req, res) => {
   try {
-    console.log("🔥 API HIT");
+    console.log(" API HIT");
 
     const { prompt } = req.body;
 
@@ -68,8 +68,6 @@ app.post("/generate-summary", async (req, res) => {
 
     const data = await response.json();
 
-    console.log("🤖 RAW:", JSON.stringify(data, null, 2));
-
     const text =
       data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
 
@@ -89,18 +87,18 @@ app.post("/generate-summary", async (req, res) => {
     res.json({ success: true, data: parsed });
 
   } catch (error) {
-    console.error("❌ AI ERROR:", error);
+    console.error(" AI ERROR:", error);
     res.status(500).json({ success: false });
   }
 });
 
 // TEST ROUTE
 app.get("/test-ai", (req, res) => {
-  console.log("✅ TEST HIT");
+  console.log("TEST HIT");
   res.send("AI route working");
 });
 
-// PORT (IMPORTANT: keep SAME as frontend expects)
+// PORT
 const PORT = 40000;
 
 app.use((err, req, res, next) => {
