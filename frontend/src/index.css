@@ -1,0 +1,20 @@
+@import "tailwindcss";
+
+/* Toolbar (slightly darker grey) */
+.ql-toolbar {
+  background-color: #e5e7eb; /* Tailwind gray-200 */
+}
+
+/* Text area container */
+.ql-container {
+  background-color: #f9fafb; /* Tailwind gray-50 (very light) */
+}
+
+/* Actual typing area */
+.ql-editor {
+  background-color: #f9fafb;
+}
+
+button {
+  cursor: pointer;
+}
