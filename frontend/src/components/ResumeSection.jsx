@@ -34,11 +34,28 @@ export const ContactInfo = ({ icon, iconBG, value }) => (
   </div>
 );
 
-export const EducationInfo = ({ degree, institution, duration }) => (
+export const EducationInfo = ({ type, degree, institution, year, score }) => (
   <div className={styles.eduContainer}>
-    <h3 className={styles.eduDegree}>{degree}</h3>
-    <p className={styles.eduInstitution}>{institution}</p>
-    <p className={styles.eduDuration}>{duration}</p>
+    
+    {/* TITLE */}
+    <h3 className={styles.eduDegree}>
+      {type === "graduation"
+        ? degree
+        : type === "class12"
+        ? "Class 12"
+        : "Class 10"}
+    </h3>
+
+    {/* COLLEGE + YEAR */}
+    <p className={styles.eduInstitution}>
+      {institution} — {year || "Present"}
+    </p>
+
+    {/* CGPA / PERCENTAGE */}
+    <p className={styles.eduDuration}>
+      {type === "graduation" ? "CGPA" : "Percentage"}: {score}
+    </p>
+
   </div>
 );
 

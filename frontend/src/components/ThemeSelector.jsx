@@ -1,28 +1,19 @@
-import React, { useEffect, useState, useRef } from "react";
+import React, { useState } from "react";
 import { resumeTemplates } from "../utils/data";
 import Tabs from "./Tabs";
-import { DUMMY_RESUME_DATA } from "../utils/data";
-import { Check } from "lucide-react";
-import RenderResume from "../components/RenderResume";
-import { TemplateCard } from "../components/Cards";
-import { transformResumeData } from "../utils/transformResumeData";
 
 const TAB_DATA = [{ label: "Templates" }];
 
 const ThemeSelector = ({
   selectedTheme,
   setSelectedTheme,
-  resumeData,
-  onClose,
 }) => {
-  const resumeRef = useRef(null);
-  const [baseWidth, setBaseWidth] = useState(800);
-
-  // Find selected template index using theme ID
+  // Find initial template
   const initialIndex = Math.max(
     0,
-    resumeTemplates.findIndex((t) => t.id === selectedTheme),
+    resumeTemplates.findIndex((t) => t.id === selectedTheme)
   );
+
   const [selectedTemplate, setSelectedTemplate] = useState({
     theme: selectedTheme || resumeTemplates[0]?.id || "",
     index: initialIndex >= 0 ? initialIndex : 0,
@@ -30,76 +21,70 @@ const ThemeSelector = ({
 
   const [tabValue, setTabValue] = useState("Templates");
 
-  const handleThemeSelection = () => {
-    if (!selectedTemplate) return;
-    setSelectedTheme(selectedTemplate.theme);
-    onClose();
-  };
-
-  const updateBaseWidth = () => {
-    if (resumeRef.current) {
-      setBaseWidth(resumeRef.current.offsetWidth);
-    }
-  };
-
-  useEffect(() => {
-    updateBaseWidth();
-    window.addEventListener("resize", updateBaseWidth);
-    return () => {
-      window.removeEventListener("resize", updateBaseWidth);
-    };
-  }, []);
-
-  const mappedData = transformResumeData(resumeData);
-
   return (
-    <div className="max-w-7xl mx-auto px-4">
+    <div className="max-w-3xl mx-auto px-4">
+      
       {/* Header */}
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 mb-8 p-4 sm:p-6 bg-linear-to-r from-white to-violet-50 rounded-2xl border border-violet-100">
+      <div className="flex items-center justify-between mb-6 p-4 bg-gradient-to-r from-white to-violet-50 rounded-2xl border border-violet-100">
         <Tabs tabs={TAB_DATA} activeTab={tabValue} setActiveTab={setTabValue} />
 
-        <button
-          className="w-full sm:w-auto flex items-center justify-center gap-3 px-6 py-3 bg-linear-to-r from-violet-600 to-fuchsia-600 text-white font-black rounded-2xl hover:scale-105 transition-all shadow-lg hover:shadow-xl"
-          onClick={handleThemeSelection}
-        >
-          <Check size={18} />
-          Apply Changes
-        </button>
+        <span className="text-sm text-gray-500">
+          Select a template ✨
+        </span>
       </div>
 
-      {/* Main Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-5 gap-6 lg:gap-8">
-        {/* Templates List */}
-        <div className="lg:col-span-2 bg-white rounded-2xl border border-gray-100 p-4 sm:p-6">
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 max-h-[60vh] lg:max-h-[70vh] overflow-auto p-2">
-            {resumeTemplates.map((template, index) => (
-              <TemplateCard
-                key={template.id}
-                template={template}
-                resumeData={resumeData}
-                isSelected={selectedTemplate.index === index}
-                onSelect={() =>
-                  setSelectedTemplate({
-                    theme: template.id,
-                    index: index,
-                  })
-                }
-              />
-            ))}
-          </div>
-        </div>
+      {/* Template List */}
+      <div className="bg-white rounded-2xl border border-gray-100 p-5 space-y-3 shadow-sm">
 
-        {/* RIGHT AREA */}
-        <div
-          className="lg:col-span-3 bg-white rounded-2xl border border-gray-100 p-4 sm:p-6"
-          ref={resumeRef}
-        >
-          <RenderResume
-            templateId={selectedTemplate?.theme || ""}
-            resumeData={mappedData}
-            containerWidth={baseWidth}
-          />
-        </div>
+        <h2 className="text-lg font-semibold text-gray-800 mb-2">
+          Templates
+        </h2>
+
+        {resumeTemplates.map((template, index) => {
+          const isActive = selectedTemplate.index === index;
+
+          return (
+            <div
+              key={template.id}
+              onClick={() => {
+                setSelectedTemplate({
+                  theme: template.id,
+                  index: index,
+                });
+
+                setSelectedTheme(template.id); // instant apply
+              }}
+              className={`
+                cursor-pointer rounded-xl p-4 transition-all duration-300 group
+                ${
+                  isActive
+                    ? "bg-blue-50 border border-blue-400 shadow-sm"
+                    : "bg-gray-50 hover:bg-gray-100 border border-transparent"
+                }
+              `}
+            >
+
+              {/* Title + Check */}
+              <div className="flex items-center justify-between">
+                <h3 className="font-semibold text-gray-900">
+                  {template.name}
+                </h3>
+
+                {isActive && (
+                  <div className="w-6 h-6 flex items-center justify-center rounded-full bg-blue-500 text-white text-sm">
+                    ✓
+                  </div>
+                )}
+              </div>
+
+              {/* Description */}
+              <p className="text-sm text-gray-500 mt-1">
+                {template.description || "Clean and professional resume layout"}
+              </p>
+
+            </div>
+          );
+        })}
       </div>
     </div>
   );

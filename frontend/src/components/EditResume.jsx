@@ -77,21 +77,23 @@ const sanitizeResumeData = (data) => ({
     role: exp?.role || "",
     startDate: exp?.startDate || "",
     endDate: exp?.endDate || "",
+    description: exp?.description || "",
   })),
 
   education: (data?.education || []).map((edu) => ({
-    degree: edu?.degree || "",
-    institution: edu?.institution || "",
-    startDate: edu?.startDate || "",
-    endDate: edu?.endDate || "",
-  })),
+  type: edu?.type || "",
+  degree: edu?.degree || "",
+  institution: edu?.institution || "",
+  endDate: edu?.endDate || "",   
+  score: edu?.score || "",       
+})),
 
 skills: (data?.skills || []).map((skill) => ({
   name: skill?.name || "",
 })),
 
   projects: (data?.projects || []).map((proj) => ({
-    title: proj?.title || "",
+    name: proj?.name || "",
     description: proj?.description || "",
   })),
 
@@ -170,6 +172,8 @@ const EditResume = () => {
     
   }
 );
+
+
 
   /* Completion calculation */
   const calculateCompletion = () => {
@@ -251,18 +255,7 @@ const EditResume = () => {
           resumeData.workExperience.forEach(
             ({ company, role, startDate, endDate }, index) => {
               // check if ALL fields are empty → skip validation
-              if (!company && !role && !startDate && !endDate) return;
-
-              if (!company || !company.trim())
-                errors.push(`Company is required in experience ${index + 1}`);
-
-              if (!role || !role.trim())
-                errors.push(`Role is required in experience ${index + 1}`);
-
-              if (!startDate || !endDate)
-                errors.push(
-                  `Start and End dates are required in experience ${index + 1}`,
-                );
+              if (!company && !role && !startDate && !endDate) return;  
             },
           );
         }
@@ -283,14 +276,6 @@ const EditResume = () => {
 
               if (!institution.trim()) {
                 newErrors[`institution_${index}`] = "Institution is required";
-              }
-
-              if (!startDate) {
-                newErrors[`startDate_${index}`] = "Start date is required";
-              }
-
-              if (!endDate) {
-                newErrors[`endDate_${index}`] = "End date is required";
               }
             },
           );
@@ -314,16 +299,6 @@ const EditResume = () => {
             ({ title, description, github, liveDemo }, index) => {
               // if ALL fields empty → skip
               if (!title && !description && !github && !liveDemo) return;
-
-              if (!title?.trim())
-                errors.push(
-                  `Project title is required in project ${index + 1}`,
-                );
-
-              if (!description?.trim())
-                errors.push(
-                  `Project description is required in project ${index + 1}`,
-                );
             },
           );
         }
@@ -349,8 +324,8 @@ const EditResume = () => {
     const pages = [
       "profile-info",
       "contact-info",
-      "work-experience",
       "education-info",
+      "work-experience",
       "skills",
       "projects",
       "certifications",
@@ -375,8 +350,8 @@ const EditResume = () => {
     const pages = [
       "profile-info",
       "contact-info",
-      "work-experience",
       "education-info",
+      "work-experience",
       "skills",
       "projects",
       "certifications",
@@ -421,6 +396,19 @@ const EditResume = () => {
           />
         );
 
+         case "education-info":
+        return (
+          <EducationDetailsForm
+            educationInfo={resumeData?.education}
+            updateArrayItem={(index, key, value) => {
+              updateArrayItem("education", index, key, value);
+            }}
+            addArrayItem={(newItem) => addArrayItem("education", newItem)}
+            removeArrayItem={(index) => removeArrayItem("education", index)}
+            errors={errors}
+          />
+        );
+
       case "work-experience":
         return (
           <WorkExperienceForm
@@ -432,19 +420,6 @@ const EditResume = () => {
             removeArrayItem={(index) =>
               removeArrayItem("workExperience", index)
             }
-          />
-        );
-
-      case "education-info":
-        return (
-          <EducationDetailsForm
-            educationInfo={resumeData?.education}
-            updateArrayItem={(index, key, value) => {
-              updateArrayItem("education", index, key, value);
-            }}
-            addArrayItem={(newItem) => addArrayItem("education", newItem)}
-            removeArrayItem={(index) => removeArrayItem("education", index)}
-            errors={errors}
           />
         );
 
@@ -515,7 +490,7 @@ const EditResume = () => {
       ...prev[section],
       [key]:
         typeof value === "string"
-          ? value.trim()
+          ? value
           : value ?? null,
     },
   }));
@@ -541,7 +516,7 @@ const EditResume = () => {
           ...updatedArray[index],
           [key]: value,
         };
-      }
+      }  
 
       return {
         ...prev,
@@ -667,6 +642,7 @@ const EditResume = () => {
 
   const downloadPDF = async () => {
     const element = resumeDownloadRef.current;
+    await document.fonts.ready;
     if (!element) {
       toast.error("Failed to generate PDF. Please try again.");
       return;
@@ -674,7 +650,7 @@ const EditResume = () => {
 
     setIsDownloading(true);
     setDownloadSuccess(false);
-    const toastId = toast.loading("Generating PDFâ€¦");
+    const toastId = toast.loading("Generating PDF");
 
     const override = document.createElement("style");
     override.id = "__pdf_color_override__";
@@ -689,25 +665,25 @@ const EditResume = () => {
 
     try {
       await html2pdf()
-        .set({
-          margin: 0,
-          filename: `${resumeData.title.replace(/[^a-z0-9]/gi, "_")}.pdf`,
-          image: { type: "png", quality: 1.0 },
+    .set({
+      margin: 0,
+      filename: "resume.pdf",
+      image: { type: "jpeg", quality: 1 },
           html2canvas: {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#FFFFFF",
-            logging: false,
-            windowWidth: element.scrollWidth,
-          },
-          jsPDF: {
-            unit: "mm",
-            format: "a4",
-            orientation: "portrait",
-          },
+        scale: 1,
+        useCORS: true,
+        backgroundColor: "#fff",
+        width: 794,
+        height: 1123,
+      },
+                jsPDF: {
+        unit: "px",
+        format: [794, 1123],
+        orientation: "portrait",
+      },
           pagebreak: {
-            mode: ["avoid-all", "css", "legacy"],
-          },
+  mode: ["css"], 
+},
         })
         .from(element)
         .save();
@@ -775,7 +751,7 @@ const EditResume = () => {
             />
           </div>
 
-          {/* RIGHT: Buttons (UNCHANGED) */}
+
           <div className="flex items-center gap-3 shrink-0">
             <button
               onClick={() => setOpenThemeSelector(true)}
@@ -868,7 +844,6 @@ const EditResume = () => {
               <div className="text-center mb-4">
                 <div className={styles.completionBadge}>
                   <div className={styles.pulseDot}></div>
-                  <span> Preview - {completionPercentage}% Complete</span>
                 </div>
               </div>
 

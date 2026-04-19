@@ -397,6 +397,15 @@ export const educationDetailsStyles = {
   heading: "text-2xl font-black text-slate-900 mb-8",
   item: "relative bg-white border border-indigo-100 p-6 rounded-2xl shadow-sm hover:shadow-lg transition-all",
   addButton: "bg-gradient-to-r from-indigo-500 to-purple-500",
+  selectWrapper: "mb-6 group",
+
+selectWrapper: "mb-6 group",
+
+selectLabel:
+  "block text-sm font-bold text-gray-800 mb-3 group-focus-within:text-violet-600 transition-colors",
+
+selectField:
+  "w-full px-4 py-3 bg-white border border-gray-300 rounded-xl text-gray-800 font-medium outline-none transition-all duration-200 cursor-pointer hover:border-violet-700 focus:border-violet-500 focus:ring-4 focus:ring-violet-100",
 };
 
 // ProfileInfoForm Styles

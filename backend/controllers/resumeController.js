@@ -45,7 +45,7 @@ export const createResume = async (req, res) => {
             ],
             projects: [
                 {
-                    title: '',
+                    name: '',
                     description: '',
                     github: '',
                     liveDemo: '',

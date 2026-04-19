@@ -98,57 +98,132 @@ const ClassicTemplate = ({ data, accentColor }) => {
         </div>
       </header>
 
-      {/* SUMMARY */}
-      {data?.professional_summary && (
+      {/* OBJECTIVE */}
+      {data?.professional_summary?.trim() && (
         <section className="mb-4">
           <h2 className="font-semibold mb-2">Objective</h2>
-          <p>{data.professional_summary}</p>
+
+          <p className="whitespace-pre-line">{data.professional_summary}</p>
         </section>
       )}
 
-      {/* EXPERIENCE */}
-{data.experience?.some(
-  (exp) =>
-    exp.position?.trim() ||
-    exp.company?.trim() ||
-    exp.description?.trim()
-) && (
+      {/* EDUCATION */}
+{data.education?.length > 0 && (
   <section className="mb-4">
-    <h2 className="font-semibold mb-2">Experience</h2>
+    <h2 className="font-semibold mb-2">Education</h2>
 
-    {data.experience
-      .filter(
+    {(() => {
+      const sortedEducation = [...data.education].sort((a, b) => {
+        const order = { graduation: 1, class12: 2, class10: 3 };
+        return order[a.type] - order[b.type];
+      });
+
+      return sortedEducation.map((edu, index) => (
+        <div key={index} className="mb-2">
+
+          {/* GRADUATION */}
+          {edu.type === "graduation" && (
+            <>
+              <p className="font-bold">{edu.degree}</p>
+              <div className="flex justify-between items-start text-sm text-gray-700">
+  <span className="font-medium">{edu.institution}</span>
+  <span className="text-gray-600 whitespace-nowrap"></span>
+  <span>— {edu.year || "Present"}</span>
+</div>
+              <p>CGPA: {edu.score}</p>
+            </>
+          )}
+
+          {/* CLASS 12 */}
+          {edu.type === "class12" && (
+  <>
+    <p className="font-bold">
+      Class XII {edu.degree && `(${edu.degree})`}
+    </p>
+    <div className="flex justify-between items-start text-sm text-gray-700">
+  <span className="font-medium">{edu.institution}</span>
+  <span className="text-gray-600 whitespace-nowrap"></span>
+  <span>— {edu.year}</span>
+</div>
+    <p>Percentage: {edu.score}</p>
+  </>
+)}
+
+          {/* CLASS 10 */}
+          {edu.type === "class10" && (
+  <>
+    <p className="font-bold">
+      Class X {edu.degree && `(${edu.degree})`}
+    </p>
+   <div className="flex justify-between items-start text-sm text-gray-700">
+  <span className="font-medium">{edu.institution}</span>
+  <span className="text-gray-600 whitespace-nowrap"></span>
+  <span>— {edu.year}</span>
+</div>
+    <p>Percentage: {edu.score}</p>
+  </>
+)}
+
+        </div>
+      ));
+    })()}
+  </section>
+)}
+
+      {/* EXPERIENCE */}
+      {data.experience?.some(
         (exp) =>
           exp.position?.trim() ||
           exp.company?.trim() ||
-          exp.description?.trim()
-      )
-      .map((exp, i) => (
-        <div key={i} className="mb-3">
-          {exp.position && (
-            <h3 className="font-medium">{exp.position}</h3>
-          )}
+          exp.description?.trim(),
+      ) && (
+        <section className="mb-4">
+          <h2 className="font-semibold mb-2">Experience</h2>
 
-          {exp.company && <p>{exp.company}</p>}
+          {data.experience
+            .filter(
+              (exp) =>
+                exp.position?.trim() ||
+                exp.company?.trim() ||
+                exp.description?.trim(),
+            )
+            .map((exp, i) => (
+              <div key={i} className="mb-3">
+                {exp.position && (
+                  <h3 className="font-medium">{exp.position}</h3>
+                )}
 
-          {(exp.start_date || exp.end_date) && (
-            <p className="text-xs text-gray-500">
-              {exp.start_date && formatDate(exp.start_date)} -{" "}
-              {exp.is_current
-                ? "Present"
-                : exp.end_date && formatDate(exp.end_date)}
-            </p>
-          )}
+                {(exp.company || exp.start_date || exp.end_date) && (
+                  <div className="flex justify-between items-start text-sm text-gray-600">
+                    {/* LEFT SIDE → Company */}
+                    {exp.company && (
+                      <span className="font-medium text-gray-800">
+                        {exp.company}
+                      </span>
+                    )}
 
-          {exp.description && (
-            <p className="whitespace-pre-line">
-              {exp.description}
-            </p>
-          )}
-        </div>
-      ))}
-  </section>
-)}
+                    {/* RIGHT SIDE → Dates */}
+                    {(exp.start_date || exp.end_date) && (
+                      <span>
+                        {exp.start_date && formatDate(exp.start_date)} -{" "}
+                        {exp.is_current
+                          ? "Present"
+                          : exp.end_date && formatDate(exp.end_date)}
+                      </span>
+                    )}
+                  </div>
+                )}
+                {exp.description && (
+                  <p className="text-sm text-gray-800 whitespace-pre-line">
+                    {String(exp.description)
+                      .replace(/(\n)?•\s*/g, "\n• ")
+                      .trim()}
+                  </p>
+                )}
+              </div>
+            ))}
+        </section>
+      )}
 
       {/* PROJECTS */}
       <section className="mb-4">
@@ -165,102 +240,96 @@ const ClassicTemplate = ({ data, accentColor }) => {
                 </a>
               )}
 
-              {p.live && (
-                <a href={p.live} target="_blank" rel="noopener noreferrer">
+              {p.liveDemo && (
+                <a href={p.liveDemo} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="size-4 text-gray-700 hover:text-black" />
                 </a>
               )}
             </div>
 
-            {p.description && (
+            {/* {p.description && (
               <p className="text-sm text-gray-600">{p.description}</p>
+            )} */}
+            <p className="text-sm text-gray-800 whitespace-pre-line">
+              {(p.description || "").replace(/(\n)?•\s*/g, "\n• ").trim()}
+            </p>
+          </div>
+        ))}
+      </section>
+
+      {/* TECH STACK */}
+      {data?.techStack && (
+        <section className="mb-4">
+          <h2 className="font-semibold mb-2">Tech Stack</h2>
+
+          <div className="space-y-1 text-sm text-gray-900">
+            {data.techStack.language?.length > 0 && (
+              <p>
+                <span className="font-medium">Languages:</span>{" "}
+                {data.techStack.language.join(", ")}
+              </p>
+            )}
+
+            {data.techStack.it_constructs?.length > 0 && (
+              <p>
+                <span className="font-medium">IT Constructs:</span>{" "}
+                {data.techStack.it_constructs.join(", ")}
+              </p>
+            )}
+
+            {data.techStack.web_development?.length > 0 && (
+              <p>
+                <span className="font-medium">Web Development:</span>{" "}
+                {data.techStack.web_development.join(", ")}
+              </p>
+            )}
+
+            {data.techStack.databases?.length > 0 && (
+              <p>
+                <span className="font-medium">Databases:</span>{" "}
+                {data.techStack.databases.join(", ")}
+              </p>
+            )}
+
+            {data.techStack.tools?.length > 0 && (
+              <p>
+                <span className="font-medium">Tools & Technologies:</span>{" "}
+                {data.techStack.tools.join(", ")}
+              </p>
             )}
           </div>
-        ))}
-      </section>
+        </section>
+      )}
 
-      {/* EDUCATION */}
-      <section className="mb-4">
-        <h2 className="font-semibold mb-2">Education</h2>
-        {data.education?.map((edu, i) => (
-          <div key={i}>
-            {edu.degree} - {edu.institution}
-            <div className="text-xs">{formatDate(edu.graduation_date)}</div>
-          </div>
-        ))}
-      </section>
-
-{/* TECH STACK */}
-{data?.techStack && (
+      {/* CERTIFICATIONS */}
+{data.certifications?.length > 0 && (
   <section className="mb-4">
-    <h2 className="font-semibold mb-2">Tech Stack</h2>
+    <h2 className="font-semibold mb-2">Certifications</h2>
 
-    <div className="space-y-1 text-sm text-gray-900">
-
-      {data.techStack.language?.length > 0 && (
-        <p>
-          <span className="font-medium">Languages:</span>{" "}
-          {data.techStack.language.join(", ")}
-        </p>
-      )}
-
-      {data.techStack.it_constructs?.length > 0 && (
-        <p>
-          <span className="font-medium">IT Constructs:</span>{" "}
-          {data.techStack.it_constructs.join(", ")}
-        </p>
-      )}
-
-      {data.techStack.web_development?.length > 0 && (
-        <p>
-          <span className="font-medium">Web Development:</span>{" "}
-          {data.techStack.web_development.join(", ")}
-        </p>
-      )}
-
-      {data.techStack.databases?.length > 0 && (
-        <p>
-          <span className="font-medium">Databases:</span>{" "}
-          {data.techStack.databases.join(", ")}
-        </p>
-      )}
-
-      {data.techStack.tools?.length > 0 && (
-        <p>
-          <span className="font-medium">Tools & Technologies:</span>{" "}
-          {data.techStack.tools.join(", ")}
-        </p>
-      )}
-    </div>
+    <ul className="list-disc pl-5 text-base text-gray-700 space-y-1">
+      {data.certifications.map((c, i) => (
+        <li key={i}>
+          {c.title} — {c.issuer} ({c.year})
+        </li>
+      ))}
+    </ul>
   </section>
 )}
 
-      {/* CERTIFICATIONS */}
-      {data.certifications?.length > 0 && (
-        <section className="mb-4">
-          <h2 className="font-semibold mb-2">Certifications</h2>
-          {data.certifications.map((c, i) => (
-            <p key={i}>
-              {c.title} ({c.year})
-            </p>
-          ))}
-        </section>
-      )}
-
       {/* ACHIEVEMENTS */}
-      {data.achievements?.length > 0 && (
-        <section className="mb-4">
-          <h2 className="font-semibold mb-2">Achievements</h2>
+{data.achievements?.length > 0 && (
+  <section className="mb-4">
+    <h2 className="font-semibold mb-2">Achievements</h2>
 
-          <ul className="list-disc pl-5 space-y-1">
-            {data.achievements.map((a, idx) => (
-              <li key={idx} className="text-gray-700">
-                <span className="font-medium">{a.title}</span>
-              </li>
-            ))}
-          </ul>
-        </section>
-      )}
+    <ul className="list-disc pl-5 text-base text-gray-700 space-y-1">
+      {data.achievements.map((a, idx) => (
+        <li key={idx} className="font-normal">
+          {a.title}
+        </li>
+      ))}
+    </ul>
+  </section>
+)}
     </div>
   );
 };

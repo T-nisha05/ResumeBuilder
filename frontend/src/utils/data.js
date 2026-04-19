@@ -1,9 +1,26 @@
 
+// in resumeTemplates (utils/data.js)
 export const resumeTemplates = [
-  { id: "classic" },
-  { id: "modern" },
-  { id: "minimal" },
-  { id: "compact" },
+  {
+    id: "classic",
+    name: "Classic",
+    description: "Traditional layout with clear sections. ATS-friendly.",
+  },
+  {
+    id: "modern",
+    name: "Modern",
+    description: "Stylish layout with color accents and modern fonts.",
+  },
+  {
+    id: "compact",
+    name: "Compact",
+    description: "Space-saving design for maximum content.",
+  },
+  {
+    id: "minimal",
+    name: "Minimal",
+    description: "Clean and distraction-free layout.",
+  },
 ];
 
 export const DUMMY_RESUME_DATA = {
@@ -22,14 +39,13 @@ export const DUMMY_RESUME_DATA = {
         website: "https://alexjohnson.dev",
     },
     education: [
-        {
-            institution: "Stanford University",
-            degree: "Master of Science",
-            major: "Computer Science",
-            minors: "Data Science",
-            location: "Stanford, CA",
-            graduationYear: "2018"
-        },
+  {
+    type: "graduation",
+    degree: "Master of Science in Computer Science",
+    institution: "Stanford University",
+    endDate: "2018",
+    score: "9.0", // or CGPA
+  },
         {
             institution: "University of California",
             degree: "Bachelor of Science",

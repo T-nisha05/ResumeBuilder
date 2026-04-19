@@ -66,7 +66,7 @@ export const AdditionalInfoForm = ({
             className={`${commonStyles.addButtonBase} ${additionalInfoStyles.addButtonLanguage}`}
             onClick={() =>
               addArrayItem("achievements", {
-                title: ""
+                title: "",
               })
             }
           >
@@ -158,73 +158,71 @@ export const ContactInfoForm = ({ contactInfo, updateSection, errors }) => {
       <h2 className={contactInfoStyles.heading}>Contact Information</h2>
 
       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        {/* EMAIL */}
+        <div className="flex flex-col">
+          <Input
+            label="Email"
+            placeholder="john@example.com"
+            type="email"
+            value={contactInfo.email || ""}
+            onChange={({ target }) => updateSection("email", target.value)}
+            error={errors?.email}
+          />
+          {errors?.email && (
+            <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+              ⚠ {errors.email}
+            </p>
+          )}
+        </div>
 
-  {/* EMAIL */}
-  <div className="flex flex-col">
-    <Input
-      label="Email"
-      placeholder="john@example.com"
-      type="email"
-      value={contactInfo.email || ""}
-      onChange={({ target }) => updateSection("email", target.value)}
-      error={errors?.email}
-    />
-    {errors?.email && (
-      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-        ⚠ {errors.email}
-      </p>
-    )}
-  </div>
+        {/* PHONE */}
+        <div className="flex flex-col">
+          <Input
+            label="Phone Number"
+            placeholder="1234567890"
+            value={contactInfo.phone || ""}
+            onChange={({ target }) => updateSection("phone", target.value)}
+            error={errors?.phone}
+          />
+          {errors?.phone && (
+            <p className="text-red-500 text-sm flex items-center gap-1">
+              ⚠ {errors.phone}
+            </p>
+          )}
+        </div>
 
-  {/* PHONE */}
-  <div className="flex flex-col">
-    <Input
-      label="Phone Number"
-      placeholder="1234567890"
-      value={contactInfo.phone || ""}
-      onChange={({ target }) => updateSection("phone", target.value)}
-      error={errors?.phone}
-    />
-    {errors?.phone && (
-      <p className="text-red-500 text-sm flex items-center gap-1">
-        ⚠ {errors.phone}
-      </p>
-    )}
-  </div>
+        {/* LINKEDIN */}
+        <Input
+          label="LinkedIn"
+          placeholder="https://linkedin.com/in/username"
+          value={contactInfo.linkedin || ""}
+          onChange={({ target }) => updateSection("linkedin", target.value)}
+        />
 
-  {/* LINKEDIN */}
-  <Input
-    label="LinkedIn"
-    placeholder="https://linkedin.com/in/username"
-    value={contactInfo.linkedin || ""}
-    onChange={({ target }) => updateSection("linkedin", target.value)}
-  />
+        {/* GITHUB */}
+        <Input
+          label="GitHub"
+          placeholder="https://github.com/username"
+          value={contactInfo.github || ""}
+          onChange={({ target }) => updateSection("github", target.value)}
+        />
 
-  {/* GITHUB */}
-  <Input
-    label="GitHub"
-    placeholder="https://github.com/username"
-    value={contactInfo.github || ""}
-    onChange={({ target }) => updateSection("github", target.value)}
-  />
+        {/* LEETCODE */}
+        <Input
+          label="LeetCode"
+          placeholder="https://leetcode.com/username"
+          value={contactInfo.leetcode || ""}
+          onChange={({ target }) => updateSection("leetcode", target.value)}
+        />
 
-  {/* LEETCODE */}
-  <Input
-    label="LeetCode"
-    placeholder="https://leetcode.com/username"
-    value={contactInfo.leetcode || ""}
-    onChange={({ target }) => updateSection("leetcode", target.value)}
-  />
-
-  {/* PORTFOLIO */}
-  <Input
-    label="Portfolio / Website"
-    placeholder="https://yourwebsite.com"
-    value={contactInfo.website || ""}
-    onChange={({ target }) => updateSection("website", target.value)}
-  />
-
-</div>
+        {/* PORTFOLIO */}
+        <Input
+          label="Portfolio / Website"
+          placeholder="https://yourwebsite.com"
+          value={contactInfo.website || ""}
+          onChange={({ target }) => updateSection("website", target.value)}
+        />
+      </div>
     </div>
   );
 };
@@ -244,83 +242,125 @@ export const EducationDetailsForm = ({
       <div className="space-y-6 mb-6">
         {educationInfo.map((education, index) => (
           <div key={index} className={educationDetailsStyles.item}>
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* DEGREE */}
-              <div className="flex flex-col">
-                <Input
-                  label="Degree"
-                  placeholder="B.Tech Computer Science"
-                  value={education.degree || ""}
-                  onChange={({ target }) =>
-                    updateArrayItem(index, "degree", target.value)
-                  }
-                  error={errors?.[`degree_${index}`]}
-                />
+              <div className="mb-4">
+      <label className="block text-sm font-medium mb-1">
+        Education Type
+      </label>
+      <select
+        value={education.type || ""}
+        onChange={(e) =>
+          updateArrayItem(index, "type", e.target.value)
+        }
+        className={educationDetailsStyles.selectField}>
 
-                {errors?.[`degree_${index}`] && (
-                  <p className="text-red-500 text-sm flex items-center gap-1">
-                    ⚠ {errors[`degree_${index}`]}
-                  </p>
-                )}
-              </div>
+        <option value="">Select Type</option>
+        <option value="graduation">Graduation</option>
+        <option value="Class XII">Class XII</option>
+        <option value="Class X">Class X</option>
+      </select>
+    </div>
+<div className="grid grid-cols-1 md:grid-cols-2 gap-6">
 
-              {/* INSTITUTION */}
-              <div className="flex flex-col">
-                <Input
-                  label="Institution"
-                  placeholder="ABC University"
-                  value={education.institution || ""}
-                  onChange={({ target }) =>
-                    updateArrayItem(index, "institution", target.value)
-                  }
-                  error={errors?.[`institution_${index}`]}
-                />
+  {/* DEGREE / STREAM / BOARD */}
+  <div className="flex flex-col">
+    <Input
+      label={
+        education.type === "graduation"
+          ? "Degree"
+          : education.type === "Class XII"
+          ? "Stream"
+          : "Board"
+      }
+      placeholder={
+        education.type === "graduation"
+          ? "B.Tech in Computer Science"
+          : education.type === "Class XII"
+          ? "PCM/Bio/Commerce"
+          : "CBSE"
+      }
+      value={education.degree || ""}
+      onChange={({ target }) =>
+        updateArrayItem(index, "degree", target.value)
+      }
+      error={errors?.[`degree_${index}`]}
+    />
 
-                {errors?.[`institution_${index}`] && (
-                  <p className="text-red-500 text-sm flex items-center gap-1">
-                    ⚠ {errors[`institution_${index}`]}
-                  </p>
-                )}
-              </div>
+    {errors?.[`degree_${index}`] && (
+      <p className="text-red-500 text-sm flex items-center gap-1">
+        ⚠ {errors[`degree_${index}`]}
+      </p>
+    )}
+  </div>
 
-              {/* START DATE */}
-              <div className="flex flex-col">
-                <Input
-                  label="Start Date"
-                  type="date"
-                  value={education.startDate || ""}
-                  onChange={({ target }) =>
-                    updateArrayItem(index, "startDate", target.value)
-                  }
-                  error={errors?.[`startDate_${index}`]}
-                />
+  {/* INSTITUTION */}
+  <div className="flex flex-col">
+  <Input
+    label={
+      education.type === "graduation"
+        ? "College Name"
+        : "School Name"
+    }
+    placeholder={
+      education.type === "graduation"
+        ? "ABC University"
+        : "ABC School"
+    }
+    value={education.institution || ""}
+    onChange={({ target }) =>
+      updateArrayItem(index, "institution", target.value)
+    }
+    error={errors?.[`institution_${index}`]}
+  />
 
-                {errors?.[`startDate_${index}`] && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    ⚠ {errors[`startDate_${index}`]}
-                  </p>
-                )}
-              </div>
+  {errors?.[`institution_${index}`] && (
+    <p className="text-red-500 text-sm flex items-center gap-1">
+      ⚠ {errors[`institution_${index}`]}
+    </p>
+  )}
+</div>
 
-              {/* END DATE */}
-              <div className="flex flex-col">
-                <Input
-                  label="End Date"
-                  type="date"
-                  value={education.endDate || ""}
-                  onChange={({ target }) =>
-                    updateArrayItem(index, "endDate", target.value)
-                  }
-                  error={errors?.[`endDate_${index}`]}
-                />
+  {/* YEAR */}
+  <div className="flex flex-col">
+    <Input
+      label="Year"
+      type="number"
+      placeholder="2023"
+      value={education.endDate || ""}
+      onChange={({ target }) => {
+        console.log(target.value); //check
+        updateArrayItem(index, "endDate", target.value)
+      }}
+      error={errors?.[`endDate_${index}`]}
+    />
 
-                {errors?.[`endDate_${index}`] && (
-                  <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
-                    ⚠ {errors[`endDate_${index}`]}
-                  </p>
-                )}
-              </div>
-            </div>
+    {errors?.[`endDate_${index}`] && (
+      <p className="text-red-500 text-sm mt-1 flex items-center gap-1">
+        ⚠ {errors[`endDate_${index}`]}
+      </p>
+    )}
+  </div>
+
+  {/* CGPA / PERCENTAGE */}
+  <div className="flex flex-col">
+    <Input
+      label={
+        education.type === "graduation"
+          ? "CGPA"
+          : "Percentage"
+      }
+      placeholder={
+        education.type === "graduation"
+          ? "8.5"
+          : "85%"
+      }
+      value={education.score || ""}
+      onChange={({ target }) =>
+        updateArrayItem(index, "score", target.value)
+      }
+    />
+  </div>
+
+</div>
 
             {/* DELETE BUTTON */}
             {educationInfo.length > 1 && (
@@ -341,10 +381,11 @@ export const EducationDetailsForm = ({
           className={`${commonStyles.addButtonBase} ${educationDetailsStyles.addButton}`}
           onClick={() =>
             addArrayItem({
+              type: "", // graduation | class12 | class10
               degree: "",
               institution: "",
-              startDate: "",
               endDate: "",
+              score: "", 
             })
           }
         >
@@ -355,16 +396,10 @@ export const EducationDetailsForm = ({
   );
 };
 
+// ProfileInfoForm Component
 export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
   const [loading, setLoading] = useState(false);
   const [aiSuggestions, setAiSuggestions] = useState([]);
-  const [editorValue, setEditorValue] = useState("");
-
-  useEffect(() => {
-  if (profileData.summary) {
-    setEditorValue(`<p>${profileData.summary}</p>`);
-  }
-}, [profileData.summary]);
 
   const handleGenerateSummary = async () => {
     try {
@@ -400,27 +435,64 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
 
       const data = await response.json();
 
-      if (data.success) {
-        setAiSuggestions(data.data);
-      } else {
-        console.error("AI failed");
-        setAiSuggestions([]);
+      let suggestions = data?.data;
+
+      // ❌ backend failure
+      if (!data?.success || !suggestions) {
+        setAiSuggestions([
+          {
+            experience_level: "AI",
+            summary:
+              "Unable to generate AI content right now.\nPlease try again.",
+          },
+        ]);
+        return;
       }
+
+      //  string → JSON
+      if (typeof suggestions === "string") {
+        try {
+          suggestions = suggestions
+            .replace(/```json/g, "")
+            .replace(/```/g, "")
+            .trim();
+
+          suggestions = JSON.parse(suggestions);
+        } catch (e) {
+          console.error("❌ JSON PARSE FAILED:", suggestions);
+
+          suggestions = [
+            {
+              experience_level: "AI",
+              summary: "Unable to parse AI response. Try again.",
+            },
+          ];
+        }
+      }
+
+      if (!Array.isArray(suggestions) || suggestions.length === 0) {
+        suggestions = [
+          {
+            experience_level: "AI",
+            summary:
+              "Unable to generate AI content right now.\nPlease try again.",
+          },
+        ];
+      }
+      setAiSuggestions(suggestions);
     } catch (err) {
       console.error("AI Error:", err);
+
+      setAiSuggestions([
+        {
+          experience_level: "AI",
+          summary: "Server error. Try again later.",
+        },
+      ]);
     } finally {
       setLoading(false);
     }
   };
-
-  const modules = {
-    toolbar: [
-      ["bold", "italic", "underline"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-    ],
-  };
-
 
   return (
     <div className={profileInfoStyles.container}>
@@ -461,11 +533,11 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
           )}
         </div>
 
-        {/* SUMMARY (INSIDE GRID) */}
+        {/* SUMMARY */}
         <div className="md:col-span-2 flex flex-col gap-3 w-full overflow-hidden">
           {/* LABEL + BUTTON */}
           <div className="flex justify-between font-bold items-center mb-3">
-            <label>Summary</label>
+            <label>Objective</label>
 
             <button
               type="button"
@@ -491,21 +563,25 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
           </div>
 
           {/* TEXTAREA */}
-          <div className="w-full max-w-full overflow-hidden">
-          <ReactQuill
-  value={editorValue}
-  onChange={(value, _d, _s, editor) => {
-    setEditorValue(value); // ✅ keep Quill working
-
-    const plainText = editor.getText().trim();
-    updateSection("summary", plainText); // ✅ store plain text
-  }}
-  modules={modules}
-  placeholder="Short introduction about yourself"
-  className="w-full"
-/>
-          </div>
-
+          <textarea
+            value={profileData.summary || ""}
+            onChange={(e) => updateSection("summary", e.target.value)}
+            placeholder="Write a short professional summary..."
+            rows={5}
+            className="
+    w-full
+    px-4 py-3
+    text-sm
+    rounded-2xl
+    border-2 border-purple-400
+    bg-white
+    shadow-[0_0_0_4px_rgba(168,85,247,0.15)]
+    focus:outline-none
+    focus:border-purple-500
+    focus:shadow-[0_0_0_4px_rgba(168,85,247,0.25)]
+    transition
+  "
+          />
 
           {/* AI Suggestions */}
           {aiSuggestions?.length > 0 && (
@@ -515,15 +591,15 @@ export const ProfileInfoForm = ({ profileData, updateSection, errors }) => {
               {aiSuggestions.map((item, index) => (
                 <div
                   key={index}
-                  onClick={() =>
-  updateSection("summary", item.summary)
-}
+                  onClick={() => {
+                    updateSection("summary", item.description);
+                  }}
                   className="p-3 border rounded-lg mt-2 cursor-pointer hover:bg-gray-100"
                 >
                   <p className="text-sm font-bold text-purple-600">
-                    {item.experience_level}
+                    {item.level}
                   </p>
-                  <p className="text-sm">{item.summary}</p>
+                  <p className="text-sm">{item.description}</p>
                 </div>
               ))}
             </div>
@@ -550,23 +626,26 @@ export const ProjectDetailForm = ({
       setLoadingIndex(index);
 
       const prompt = `
-      Project Title: ${project.title}
+Project Title: ${project.name}
 
-      Write 3 professional resume-ready project descriptions:
-      - Beginner
-      - Intermediate
-      - Advanced
+Write 3 professional resume-ready project descriptions:
+- Beginner
+- Intermediate
+- Advanced
 
-      Each should be 2-3 lines.
+Each should be 2-3 lines.
 
-      Return ONLY JSON:
-      [
-        { "level": "Beginner", "description": "..." },
-        { "level": "Intermediate", "description": "..." },
-        { "level": "Advanced", "description": "..." }
-      ]
-      `;
+⚠️ VERY IMPORTANT:
+Each line MUST start with "• " (bullet symbol).
+Do NOT write paragraphs.
 
+Return ONLY JSON:
+[
+  { "level": "Beginner", "description": "..." },
+  { "level": "Intermediate", "description": "..." },
+  { "level": "Advanced", "description": "..." }
+]
+`;
       const response = await fetch("http://127.0.0.1:40000/generate-summary", {
         method: "POST",
         headers: {
@@ -577,11 +656,45 @@ export const ProjectDetailForm = ({
 
       const data = await response.json();
 
-      if (data.success) {
+      let suggestions = data?.data || data;
+
+      // 🧠 CASE 1: Gemini raw response (candidates)
+      if (data?.candidates) {
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+        try {
+          suggestions = JSON.parse(text);
+        } catch (e) {
+          console.error("Parse failed (candidates):", text);
+          suggestions = [];
+        }
+      }
+
+      // 🧠 CASE 2: string JSON
+      else if (typeof suggestions === "string") {
+        try {
+          suggestions = JSON.parse(suggestions);
+        } catch (e) {
+          console.error("Parse failed (string):", suggestions);
+          suggestions = [];
+        }
+      }
+
+      // 🧠 FINAL PROCESS
+      if (Array.isArray(suggestions)) {
+        const normalized = suggestions.map((item) => ({
+          level: item.level || item.experience_level || "AI",
+          description: item.description || item.summary || "",
+        }));
+
         setAiSuggestions((prev) => ({
           ...prev,
-          [index]: data.data,
+          [index]: normalized,
         }));
+
+        console.log("FINAL SUGGESTIONS:", normalized);
+      } else {
+        console.error("Invalid AI response:", data);
       }
     } catch (err) {
       console.error("AI Error:", err);
@@ -589,15 +702,6 @@ export const ProjectDetailForm = ({
       setLoadingIndex(null);
     }
   };
-
-  const modules = {
-    toolbar: [
-      ["bold", "italic", "underline"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-    ],
-  };
-
   return (
     <div className={projectDetailStyles.container}>
       <h2 className={projectDetailStyles.heading}>Projects</h2>
@@ -611,9 +715,9 @@ export const ProjectDetailForm = ({
                 <Input
                   label="Project Title"
                   placeholder="Portfolio Website"
-                  value={project.title || ""}
+                  value={project.name || ""}
                   onChange={({ target }) =>
-                    updateArrayItem(index, "title", target.value)
+                    updateArrayItem(index, "name", target.value)
                   }
                 />
               </div>
@@ -631,7 +735,7 @@ export const ProjectDetailForm = ({
               {/* LIVE DEMO */}
               <Input
                 label="Live Demo URL"
-                placeholder="https://yourproject.live"
+                placeholder="https://yourproject.liveDemo"
                 value={project.liveDemo || ""}
                 onChange={({ target }) =>
                   updateArrayItem(index, "liveDemo", target.value)
@@ -668,14 +772,57 @@ export const ProjectDetailForm = ({
                   </button>
                 </div>
 
-                {/* REACT QUILL */}
-                <ReactQuill
+                {/* TEXT AREA */}
+                <textarea
                   value={project.description || ""}
-                  onChange={(value) =>
-                    updateArrayItem(index, "description", value)
-                  }
-                  modules={modules}
+                  onChange={(e) => {
+                    let value = e.target.value;
+
+                    if (value.length === 1 && value !== "•") {
+                      value = "• " + value;
+                    }
+
+                    updateArrayItem(index, "description", value);
+                  }}
+                  onKeyDown={(e) => {
+                    if (e.key === "Enter") {
+                      e.preventDefault();
+
+                      const textarea = e.target;
+                      const start = textarea.selectionStart;
+                      const end = textarea.selectionEnd;
+
+                      const value = project.description || "";
+
+                      const newValue =
+                        value.substring(0, start) +
+                        "\n• " +
+                        value.substring(end);
+
+                      updateArrayItem(index, "description", newValue);
+
+                      // move cursor after bullet
+                      setTimeout(() => {
+                        textarea.selectionStart = textarea.selectionEnd =
+                          start + 3;
+                      }, 0);
+                    }
+                  }}
                   placeholder="Write project description..."
+                  rows={5}
+                  className="
+    w-full
+    px-4 py-3
+    text-sm
+    rounded-2xl
+    border-2 border-purple-400
+    bg-white
+    shadow-[0_0_0_4px_rgba(168,85,247,0.15)]
+    focus:outline-none
+    focus:border-purple-500
+    focus:shadow-[0_0_0_4px_rgba(168,85,247,0.25)]
+    transition
+  "
                 />
 
                 {/* AI SUGGESTIONS */}
@@ -686,13 +833,18 @@ export const ProjectDetailForm = ({
                     {aiSuggestions[index].map((item, i) => (
                       <div
                         key={i}
-                        onClick={() =>
+                        onClick={() => {
                           updateArrayItem(
                             index,
                             "description",
-                            `<p>${item.description}</p>`,
-                          )
-                        }
+                            item.description,
+                          );
+                          updateArrayItem(
+                            index,
+                            "description",
+                            item.description || item.summary,
+                          );
+                        }}
                         className="p-3 border rounded-lg mt-2 cursor-pointer hover:bg-gray-100"
                       >
                         <p className="text-sm font-bold text-purple-600">
@@ -725,7 +877,7 @@ export const ProjectDetailForm = ({
           className={`${commonStyles.addButtonBase} ${projectDetailStyles.addButton}`}
           onClick={() =>
             addArrayItem({
-              title: "",
+              name: "",
               description: "",
               github: "",
               liveDemo: "",
@@ -747,72 +899,68 @@ export const SkillsInfoForm = ({
   addArrayItem,
   removeArrayItem,
   updateSection,
-  setResumeData 
+  setResumeData,
 }) => {
   const [loadingIndex, setLoadingIndex] = useState(false);
   const [categorizedSkills, setCategorizedSkills] = useState(null);
 
-
   //  Normalize function (outside API logic)
-const normalizeSkills = (data = {}) => {
-  const result = {};
+  const normalizeSkills = (data = {}) => {
+    const result = {};
 
-  ["frontend", "backend", "database", "tools"].forEach((key) => {
-    const value = data?.[key];
+    ["frontend", "backend", "database", "tools"].forEach((key) => {
+      const value = data?.[key];
 
-    if (Array.isArray(value)) {
-      result[key] = value;
-    } else if (typeof value === "string" && value.trim() !== "") {
-      result[key] = [value];
-    } else {
-      result[key] = [];
-    }
-  });
+      if (Array.isArray(value)) {
+        result[key] = value;
+      } else if (typeof value === "string" && value.trim() !== "") {
+        result[key] = [value];
+      } else {
+        result[key] = [];
+      }
+    });
 
-  return result;
-};
+    return result;
+  };
 
   //  AI Categorization
   const handleAutoCategorize = async () => {
-  try {
-    setLoadingIndex(true);
-    
-    await new Promise((resolve) => setTimeout(resolve, 500));
+    try {
+      setLoadingIndex(true);
 
-    const response = await axiosInstance.post(
-      API_PATHS.AI.CATEGORIZE_SKILLS,
-      {
-        skills: skillsInfo.map((s) => s.name),
+      await new Promise((resolve) => setTimeout(resolve, 500));
+
+      const response = await axiosInstance.post(
+        API_PATHS.AI.CATEGORIZE_SKILLS,
+        {
+          skills: skillsInfo.map((s) => s.name),
+        },
+      );
+
+      const rawData = response?.data?.data || response?.data;
+
+      if (!rawData) {
+        console.error("Invalid AI response:", response);
+        return;
       }
-    );
 
-    const rawData = response?.data?.data;
-    console.log("ACTUAL AI DATA:", response.data);
+      const normalized = normalizeSkills(rawData);
 
-    if (!rawData) {
-      console.error("Invalid AI response:", response);
+      setCategorizedSkills(normalized);
 
-      return;
+      setResumeData((prev) => ({
+        ...prev,
+        techStack: rawData,
+      }));
+    } catch (error) {
+      console.error("AI Error:", error);
+    } finally {
+      setLoadingIndex(false);
     }
-
-    const normalized = normalizeSkills(rawData); 
-
-    setCategorizedSkills(normalized);
-
-    setResumeData((prev) => ({
-  ...prev,
-  techStack: rawData,
-}));
-  } catch (error) {
-    console.error("AI Error:", error);
-  } finally {
-    setLoadingIndex(false);
-  }
-};
+  };
 
   return (
     <div className={skillsInfoStyles.container}>
-      
       {/* HEADER */}
       <div className="flex justify-between items-center mb-4">
         <h2 className={skillsInfoStyles.heading}>Tech Stack</h2>
@@ -828,21 +976,20 @@ const normalizeSkills = (data = {}) => {
         text-purple-700 border-purple-500 bg-white
         hover:bg-purple-50 hover:text-black hover:border-purple-600
         transition-all duration-200"
-                >
-                  {loadingIndex ? (
-                    <LoaderCircle className="animate-spin w-4 h-4" />
-                  ) : (
-                    <Brain className="w-4 h-4" />
-                  )}
-                  Auto Categorize
-                </button>
+        >
+          {loadingIndex ? (
+            <LoaderCircle className="animate-spin w-4 h-4" />
+          ) : (
+            <Brain className="w-4 h-4" />
+          )}
+          Auto Categorize
+        </button>
       </div>
 
       {/* SKILL INPUTS */}
       <div className="space-y-6 mb-6">
         {skillsInfo.map((skill, index) => (
           <div key={index} className={skillsInfoStyles.item}>
-            
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
               <Input
                 label="Skill Name"
@@ -891,27 +1038,34 @@ export const WorkExperienceForm = ({
   const [aiSuggestions, setAiSuggestions] = useState({});
 
   const handleGenerateExperienceDescription = async (index, exp) => {
+    console.log("FUNCTION CALLED", index, exp);
     try {
       setLoadingIndex(index);
 
       const prompt = `
-    Role: ${exp.role}
-    Company: ${exp.company}
+Role: ${exp.role}
+Company: ${exp.company}
 
-    Write 3 professional resume bullet-style descriptions:
-    - Beginner
-    - Intermediate
-    - Advanced
+Write 3 professional resume work experience descriptions.
 
-    Each should be 2-3 lines.
+Each must:
+- Have 2-3 bullet points
+- Each bullet starts with "• "
+- Each bullet on a NEW LINE
 
-    Return ONLY JSON:
-    [
-      { "level": "Beginner", "description": "..." },
-      { "level": "Intermediate", "description": "..." },
-      { "level": "Advanced", "description": "..." }
-    ]
-    `;
+IMPORTANT:
+Return ONLY a valid JSON array.
+DO NOT add explanation.
+DO NOT add markdown.
+
+Example format:
+[
+  {
+    "level": "Beginner",
+    "description": "• Did X\n• Did Y\n• Did Z"
+  }
+]
+`;
 
       const response = await fetch("http://127.0.0.1:40000/generate-summary", {
         method: "POST",
@@ -922,12 +1076,41 @@ export const WorkExperienceForm = ({
       });
 
       const data = await response.json();
+      console.log("API RESPONSE:", data);
+      let suggestions = data?.data || data;
 
-      if (data.success) {
+      if (data?.candidates) {
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text || "";
+
+        try {
+          suggestions = JSON.parse(text);
+        } catch (e) {
+          console.error("Parse failed (candidates):", text);
+          suggestions = [];
+        }
+      } else if (typeof suggestions === "string") {
+        try {
+          suggestions = JSON.parse(suggestions);
+        } catch (e) {
+          console.error("Parse failed (string):", suggestions);
+          suggestions = [];
+        }
+      }
+
+      if (Array.isArray(suggestions)) {
+        const normalized = suggestions.map((item) => ({
+          level: item.level || item.experience_level || "AI",
+          description: item.description || item.summary || "",
+        }));
+
         setAiSuggestions((prev) => ({
           ...prev,
-          [index]: data.data,
+          [index]: normalized,
         }));
+
+        console.log("FINAL SUGGESTIONS:", normalized);
+      } else {
+        console.error("Invalid AI response:", data);
       }
     } catch (err) {
       console.error("AI Error:", err);
@@ -936,13 +1119,9 @@ export const WorkExperienceForm = ({
     }
   };
 
-  const modules = {
-    toolbar: [
-      ["bold", "italic", "underline"],
-      [{ list: "ordered" }, { list: "bullet" }],
-      ["link"],
-    ],
-  };
+  useEffect(() => {
+    console.log("WORK EXPERIENCE UPDATED:", workExperience);
+  }, [workExperience]);
 
   return (
     <div className={workExperienceStyles.container}>
@@ -996,9 +1175,10 @@ export const WorkExperienceForm = ({
 
                 <button
                   type="button"
-                  onClick={() =>
-                    handleGenerateExperienceDescription(index, experience)
-                  }
+                  onClick={() => {
+                    console.log("BUTTON CLICKED");
+                    handleGenerateExperienceDescription(index, experience);
+                  }}
                   className="
         flex items-center gap-2
         px-5 py-2.5
@@ -1017,18 +1197,57 @@ export const WorkExperienceForm = ({
                 </button>
               </div>
 
-              {/* EDITOR */}
-              <div className="w-full">
-                <ReactQuill
-                  value={experience.description || ""}
-                  onChange={(value) =>
-                    updateArrayItem(index, "description", value)
+              {/* TEXTAREA */}
+              <textarea
+                value={experience.description || ""}
+                onChange={(e) => {
+                  let value = e.target.value;
+
+                  // only add bullet if empty
+                  if (!value.startsWith("•") && value.length > 0) {
+                    value = "• " + value;
                   }
-                  modules={modules}
-                  placeholder="Short description about your work experience"
-                  className="w-full"
-                />
-              </div>
+
+                  updateArrayItem(index, "description", value);
+                }}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+
+                    const textarea = e.target;
+                    const start = textarea.selectionStart;
+                    const end = textarea.selectionEnd;
+
+                    const value = experience.description || "";
+
+                    const newValue =
+                      value.substring(0, start) + "\n• " + value.substring(end);
+
+                    updateArrayItem(index, "description", newValue);
+
+                    // move cursor after bullet
+                    setTimeout(() => {
+                      textarea.selectionStart = textarea.selectionEnd =
+                        start + 3;
+                    }, 0);
+                  }
+                }}
+                placeholder="Short description about your work experience"
+                rows={5}
+                className="
+    w-full
+    px-4 py-3
+    text-sm
+    rounded-2xl
+    border-2 border-purple-400
+    bg-white
+    shadow-[0_0_0_4px_rgba(168,85,247,0.15)]
+    focus:outline-none
+    focus:border-purple-500
+    focus:shadow-[0_0_0_4px_rgba(168,85,247,0.25)]
+    transition
+  "
+              />
 
               {/* AI Suggestions */}
               {aiSuggestions[index]?.length > 0 && (
@@ -1038,19 +1257,25 @@ export const WorkExperienceForm = ({
                   {aiSuggestions[index].map((item, i) => (
                     <div
                       key={i}
-                      onClick={() =>
-                        updateArrayItem(
-                          index,
-                          "description",
-                          `<p>${item.description}</p>`,
-                        )
-                      }
+                      onClick={() => {
+                        const formatted = (item.description || "")
+                          .replace(/,\s*•/g, "\n• ") // fix comma bullets
+                          .replace(/•\s*/g, "\n• ") // ensure new line bullets
+                          .replace(/^\n/, "") // remove first extra newline
+                          .trim();
+
+                        console.log("CLICKED DESC:", formatted); // debug
+
+                        updateArrayItem(index, "description", formatted);
+                      }}
                       className="p-3 border rounded-lg mt-2 cursor-pointer hover:bg-gray-100"
                     >
                       <p className="text-sm font-bold text-purple-600">
-                        {item.level}
+                        {item.level || item.experience_level}
                       </p>
-                      <p className="text-sm">{item.description}</p>
+                      <p className="text-sm">
+                        {item.description || item.summary}
+                      </p>
                     </div>
                   ))}
                 </div>

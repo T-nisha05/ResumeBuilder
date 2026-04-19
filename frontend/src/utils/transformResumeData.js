@@ -1,11 +1,13 @@
 export const transformResumeData = (resumeData) => {
   if (!resumeData) return {};
 
+  console.log(resumeData);
+
   return {
     //  PERSONAL INFO
     personal_info: {
       full_name: resumeData.profileInfo?.fullName || "",
-      designation: resumeData?.profileInfo?.designation || "", 
+      designation: resumeData?.profileInfo?.designation || "",
       email: resumeData.contactInfo?.email || "",
       phone: resumeData.contactInfo?.phone || "",
       leetcode: resumeData.contactInfo?.leetcode || "",
@@ -15,7 +17,7 @@ export const transformResumeData = (resumeData) => {
     },
 
     //  SUMMARY
-    professional_summary: resumeData.profileInfo?.summary || "",
+    professional_summary: resumeData.profileInfo.summary,
 
     //  EXPERIENCE
     experience: (resumeData.workExperience || []).map((exp) => ({
@@ -30,33 +32,32 @@ export const transformResumeData = (resumeData) => {
 
     //  PROJECTS
     project: (resumeData.projects || []).map((proj) => ({
-      name: proj.title || "",
+      name: proj.name || "",
       description: proj.description || "",
       technologies: proj.technologies || [],
       github: proj.github || "",
-      live: proj.liveDemo || "",
+      liveDemo: proj.liveDemo || "",
     })),
 
-    //  EDUCATION
+    // EDUCATION
     education: (resumeData.education || []).map((edu) => ({
+      type: edu.type || "",
       degree: edu.degree || "",
-      field: edu.major || "",
       institution: edu.institution || "",
-      graduation_date: edu.graduationYear || edu.endDate || "",
-      gpa: edu.gpa || "",
+      year: edu.endDate || "",
+      score: edu.score || "",
     })),
 
-    //  SKILLS 
-   skills: (resumeData.skills || [])
-  .map((skill) =>
-    typeof skill === "object" ? skill.name : skill
-  )
-  .filter(Boolean),
+    //  SKILLS
+    skills: (resumeData.skills || [])
+      .map((skill) => (typeof skill === "object" ? skill.name : skill))
+      .filter(Boolean),
 
-    //  CERTIFICATIONS 
+    //  CERTIFICATIONS
     certifications: (resumeData.certifications || []).map((cert) => ({
       title: cert.title || "",
       year: cert.year || "",
+      issuer: cert.issuer || "",
     })),
 
     // ACHIEVEMENTS
@@ -64,10 +65,9 @@ export const transformResumeData = (resumeData) => {
 
     // SKILLS
     techStack: resumeData.techStack || {
-    frontend: [],
-    backend: [],
-    database: [],
-    
-},
+      frontend: [],
+      backend: [],
+      database: [],
+    },
   };
 };

@@ -49,13 +49,15 @@ const Dashboard = () => {
     });
 
     // Education
-    resume.education?.forEach((edu) => {
-      totalFields += 4;
-      if (edu.degree) completedFields++;
-      if (edu.institution) completedFields++;
-      if (edu.startDate) completedFields++;
-      if (edu.endDate) completedFields++;
-    });
+resume.education?.forEach((edu) => {
+  totalFields += 5;
+
+  if (edu.type) completedFields++;
+  if (edu.degree) completedFields++;
+  if (edu.institution) completedFields++;
+  if (edu.endDate) completedFields++; // year
+  if (edu.score) completedFields++;   // CGPA / Percentage
+});
 
     // Skills
     resume.skills?.forEach((skill) => {
@@ -66,7 +68,7 @@ const Dashboard = () => {
     // Projects
     resume.projects?.forEach((project) => {
       totalFields += 4;
-      if (project.title) completedFields++;
+      if (project.name) completedFields++;
       if (project.description) completedFields++;
       if (project.github) completedFields++;
       if (project.liveDemo) completedFields++;

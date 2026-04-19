@@ -18,13 +18,42 @@
 
 /* Make this wrapper at least 210mm × 297mm, but let it shrink if content is shorter */
  .a4-wrapper {
-    width: 210mm;
-    min-height: 297mm;
-    background: white;
-    box-sizing: border-box;
-    overflow: hidden;
-    page-break-after: always;
-  }
+  width: 794px;      /* ✅ exact A4 width */
+  height: 1123px;    /* ✅ exact A4 height */
+  padding: 40px;
+  margin: 0 auto;
+  background: #fff;
+
+  box-sizing: border-box;
+  overflow: hidden;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+.a4-wrapper * {
+  max-width: 100%;
+}
+
+h1, h2, h3, p, span {
+  white-space: normal;
+  word-break: break-word;
+  overflow: visible;
+}
+
+.a4-wrapper {
+  overflow-wrap: break-word;
+  word-break: break-word;
+}
+
+h1, h2, h3, p, span {
+  overflow: visible;
+}
+
+section {
+  page-break-inside: avoid;
+}
 
 /* Avoid breaking inside headings or custom section titles */
 .a4-wrapper h1,

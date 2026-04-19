@@ -31,14 +31,13 @@ const resumeSchema = new mongoose.Schema({
   education: [{
     degree: String,
     institution: String,
-    startDate: String,
     endDate: String
   }],
   skills: [{
     name: String,
   }],
   projects: [{
-    title: String,
+    name: String,
     description: String,
     githubLink: String,
     liveDemoLink: String
