@@ -99,9 +99,8 @@ Cached responses for performance optimization
 Safe fallback responses when API fails
 
 ⚙️ Tech Stack
-Languages: Python, Java, C++
+Frontend: React, Vite, Context API
 Backend: Node.js, Express.js
-IT Construct: AI/ML, Data Science, Data Structure and Alogorithm(DSA)
 Database: MongoDB Atlas
 Authentication: JWT
 AI: Google Gemini API
