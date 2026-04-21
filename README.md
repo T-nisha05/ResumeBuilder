@@ -211,8 +211,8 @@ CLIENT_URL=https://your-frontend-url.onrender.com
 
 ## 👨‍💻 Author
 
--Tanisha Pandya | Software Engineering Aspirant
--GitHub: https://github.com/T-nisha05
+Tanisha Pandya | Software Engineering Aspirant
+GitHub: https://github.com/T-nisha05
 
 ---
 
