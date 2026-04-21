@@ -104,12 +104,16 @@ Gemini AI API
 
 ## ⚙️ Tech Stack
 
-- Frontend: React, Vite, Context API  
-- Backend: Node.js, Express.js  
-- Database: MongoDB Atlas  
-- Authentication: JWT  
-- AI: Google Gemini API  
-- Deployment: Render  
+| Layer | Technology |
+|------|------------|
+| Frontend | React, Vite, Context API |
+| Backend | Node.js, Express.js |
+| Database | MongoDB Atlas |
+| Authentication | JWT |
+| AI Integration | Google Gemini API |
+| Deployment | Render |
+
+---
 
 ````
 🗂 Database Schema (MongoDB)
@@ -152,6 +156,7 @@ cd frontend
 npm install
 npm run dev
 ````
+---
 
 ## 🔗 API Endpoints
 
@@ -163,6 +168,8 @@ npm run dev
 | POST | /api/ai/skills | AI skill categorization |
 | GET | /api/resumes | Fetch resumes |
 | POST | /api/resumes | Create resume |
+
+---
 
 
 ## 💡 Key Learnings
@@ -194,5 +201,6 @@ GitHub: [T-nisha05](https://github.com/T-nisha05)
 - ✔ AI integrated full-stack system  
 - ✔ Internship / Portfolio ready  
 
-🏁 Final Note
+---
+
 This project demonstrates real-world full-stack engineering skills including API development, authentication systems, database design, and AI integration with practical automation features like AI-based skill categorization.
