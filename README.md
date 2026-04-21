@@ -116,8 +116,9 @@ Gemini AI API
 
 ---
 
-````
-🗂 Database Schema (MongoDB)
+## 🗂 Database Schema (MongoDB)
+
+```
 User Model
 {
   "name": "string",
@@ -143,10 +144,12 @@ Resume Model
   "createdAt": "date"
 }
 ````
-```
-🛠 Installation & Setup
-git clone https://github.com/T-nisha05/ResumeBuilder
+---
 
+## 🛠 Installation & Setup
+
+git clone https://github.com/T-nisha05/ResumeBuilder
+```
 # Backend
 cd backend
 npm install
