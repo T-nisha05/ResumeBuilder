@@ -225,4 +225,4 @@ GitHub: [T-nisha05](https://github.com/T-nisha05)
 
 ---
 
-This project demonstrates real-world full-stack engineering skills including API development, authentication systems, database design, and AI integration with practical automation features like AI-based skill categorization.
+🚀 Built a full-stack resume builder demonstrating end-to-end engineering skills, including REST API development, secure authentication, scalable database design, and seamless AI integration, with automation features such as AI-powered skill categorization to enhance user experience and resume quality.
