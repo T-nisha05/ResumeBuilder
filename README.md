@@ -91,7 +91,9 @@ MongoDB Atlas Database
         ↓
 Gemini AI API
 ````
+
 🤖 AI Integration (Gemini API)
+
 AI-powered resume summary generation
 AI-based skills categorization
 Retry mechanism for rate limits (429 handling)
@@ -99,6 +101,7 @@ Cached responses for performance optimization
 Safe fallback responses when API fails
 
 ⚙️ Tech Stack
+
 Frontend: React, Vite, Context API
 Backend: Node.js, Express.js
 Database: MongoDB Atlas
@@ -147,7 +150,9 @@ cd frontend
 npm install
 npm run dev
 ````
+
 🔗 API Endpoints
+
 Method	Endpoint	Description
 POST	/api/auth/register	User registration
 POST	/api/auth/login	User login
@@ -157,6 +162,7 @@ GET	/api/resumes	Fetch resumes
 POST	/api/resumes	Create resume
 
 💡 Key Learnings
+
 Full-stack deployment using Render
 AI integration using Gemini API
 JWT authentication flow
@@ -165,6 +171,7 @@ Production-level environment handling
 AI-based UI automation (skills categorization)
 
 🚀 Future Enhancements
+
 AI resume scoring (ATS match score)
 Drag & drop editor
 PDF export improvements
@@ -172,10 +179,12 @@ Resume sharing links
 Smart job-role templates
 
 👨‍💻 Author
+
 Tanisha Pandya
 GitHub: T-nisha05
 
 ⭐ Project Status
+
 ✔ Fully deployed
 ✔ Production ready
 ✔ AI integrated full-stack system
