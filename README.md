@@ -8,8 +8,8 @@ Built with React, Node.js, Express, MongoDB, and Gemini AI, and deployed on Rend
 
 ## 🚀 Live Demo
 
-Frontend: https://resumebuilder-1-uywr.onrender.com
-Backend API: https://resume-builder-backend-svs4.onrender.com 
+Frontend: https://resumebuilder-1-uywr.onrender.com  
+Backend API: https://resume-builder-backend-svs4.onrender.com  
 
 ---
 
@@ -28,7 +28,7 @@ This project solves these issues using **AI assistance + automation + structured
 ## ✨ Key Features
 
 ### 🧠 AI Resume Summary Generator
-- Generates professional resume summaries using Gemini AI
+- Generates professional summaries using Gemini AI
 - Context-aware output based on user experience
 - Retry mechanism + fallback handling for API failures
 - Clean JSON structured response for UI rendering
@@ -36,14 +36,14 @@ This project solves these issues using **AI assistance + automation + structured
 ---
 
 ### ⚡ AI Skills Organizer (Unique Feature ⭐)
-- One-click **AI button to categorize skills automatically**
+- One-click AI button to categorize skills automatically
 - Groups skills into:
-  - Frontend (React, HTML, CSS, etc.)
-  - Backend (Node.js, Express, etc.)
+  - Frontend (React, HTML, CSS)
+  - Backend (Node.js, Express)
   - Database (MongoDB, SQL)
-  - Tools & Platforms (Git, Postman, Docker, etc.)
-- Improves resume readability and ATS scoring
-- Removes manual effort of organizing skills
+  - Tools (Git, Postman, Docker)
+- Improves resume readability and ATS score
+- Eliminates manual skill sorting
 
 ---
 
@@ -62,40 +62,54 @@ This project solves these issues using **AI assistance + automation + structured
 ### 🎨 Multiple Resume Templates
 - Clean and modern templates
 - Switch templates instantly
-- Designed for ATS compatibility and readability
+- ATS-friendly design
 
 ---
 
 ### 🔐 Authentication System
 - Secure login & registration
 - JWT-based authentication
-- Protected user routes
+- Protected routes
 
 ---
 
 ### 💾 Resume Management
 - Save multiple resumes per user
 - Edit and update anytime
-- Data stored securely in MongoDB
+- MongoDB-based persistence
 
 ---
 
 ## 🧱 System Architecture
 
-Frontend (React + Vite)  
-        ↓  
-Backend (Node.js + Express)  
-        ↓  
-MongoDB Atlas Database  
-        ↓  
-Gemini AI API (Summary + Skills categorization)
+```text
+Frontend (React + Vite)
+        ↓
+Backend (Node.js + Express)
+        ↓
+MongoDB Atlas Database
+        ↓
+Gemini AI API
+````
+🤖 AI Integration (Gemini API)
+AI-powered resume summary generation
+AI-based skills categorization
+Retry mechanism for rate limits (429 handling)
+Cached responses for performance optimization
+Safe fallback responses when API fails
 
----
+⚙️ Tech Stack
+Languages: Python, Java, C++
+Backend: Node.js, Express.js
+IT Construct: AI/ML, Data Science, Data Structure and Alogorithm(DSA)
+Database: MongoDB Atlas
+Authentication: JWT
+AI: Google Gemini API
+Deployment: Render
 
-## 🗂 Database Schema (MongoDB)
-
-### User Model
-```json
+````
+🗂 Database Schema (MongoDB)
+User Model
 {
   "name": "string",
   "email": "string",
@@ -119,37 +133,21 @@ Resume Model
   },
   "createdAt": "date"
 }
-
-🤖 AI Integration (Gemini API)
-AI-powered resume summary generation
-AI-based skills categorization logic
-Retry mechanism for rate limits (429 handling)
-Cached responses for performance optimization
-Safe fallback responses when API fails
-
-⚙️ Tech Stack
-
-Frontend: React, Vite, Context API
-Backend: Node.js, Express.js
-Database: MongoDB Atlas
-Authentication: JWT
-AI: Google Gemini API
-Deployment: Render
-
+````
+```
 🛠 Installation & Setup
-# Clone repository
 git clone https://github.com/T-nisha05/ResumeBuilder
 
-# Backend setup
+# Backend
 cd backend
 npm install
 npm start
 
-# Frontend setup
+# Frontend
 cd frontend
 npm install
 npm run dev
-
+````
 🔗 API Endpoints
 Method	Endpoint	Description
 POST	/api/auth/register	User registration
@@ -162,32 +160,27 @@ POST	/api/resumes	Create resume
 💡 Key Learnings
 Full-stack deployment using Render
 AI integration using Gemini API
-Real-world API design & architecture
 JWT authentication flow
-MongoDB schema modeling
-AI-driven UI automation (skills categorization)
-Production environment handling
+MongoDB schema design
+Production-level environment handling
+AI-based UI automation (skills categorization)
 
 🚀 Future Enhancements
 AI resume scoring (ATS match score)
-Drag & drop resume editor
-Resume PDF export improvements
-Public resume sharing links
-Smart job-role based templates
-Multi-language resume support
+Drag & drop editor
+PDF export improvements
+Resume sharing links
+Smart job-role templates
 
 👨‍💻 Author
-Tanu Pandya
+Tanisha Pandya
 GitHub: T-nisha05
 
 ⭐ Project Status
-
 ✔ Fully deployed
 ✔ Production ready
 ✔ AI integrated full-stack system
 ✔ Internship / Portfolio ready
-✔ Real-world problem solving project
 
 🏁 Final Note
-This project demonstrates strong full-stack engineering skills including API development, authentication systems,
- database design, and AI integration — with real-world usability and automation features like AI-based skill categorization.
+This project demonstrates real-world full-stack engineering skills including API development, authentication systems, database design, and AI integration with practical automation features like AI-based skill categorization.
