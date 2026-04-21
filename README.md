@@ -218,10 +218,10 @@ GitHub: [T-nisha05](https://github.com/T-nisha05)
 
 ## ⭐ Project Status
 
-- ✔ Fully deployed  
-- ✔ Production ready  
-- ✔ AI integrated full-stack system  
-- ✔ Internship / Portfolio ready  
+- ✅ Successfully deployed on Render (Frontend + Backend)
+- ✅ Production-ready full-stack application
+- ✅ AI-powered features integrated (Gemini API)
+- ✅ Portfolio-ready project for internship applications
 
 ---
 
