@@ -12,6 +12,28 @@ const MinimalTemplate = ({ data }) => {
     });
   };
 
+   const getShortLink = (url) => {
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("linkedin")) {
+      return "linkedin.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("github")) {
+      return "github.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("leetcode")) {
+      return "leetcode.com" + parsed.pathname;
+    }
+
+    return parsed.hostname.replace("www.", "");
+  } catch {
+    return url;
+  }
+};
+
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white text-gray-800 leading-relaxed">
       {/* HEADER */}
@@ -40,56 +62,64 @@ const MinimalTemplate = ({ data }) => {
           )}
         </div>
 
-        {/* LINKS */}
-        <div className="flex flex-wrap justify-center gap-4 mt-2 text-xs text-gray-600">
-          {data.personal_info?.linkedin && (
-            <a
-              href={data.personal_info.linkedin}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 hover:underline"
-            >
-              <Linkedin size={12} />
-              LinkedIn
-            </a>
-          )}
+   {/* LINKS */}
+<div className="flex flex-col items-center gap-1 mt-2 text-xs text-gray-600">
 
-          {data.personal_info?.github && (
-            <a
-              href={data.personal_info.github}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 hover:underline"
-            >
-              <Github size={12} />
-              GitHub
-            </a>
-          )}
+  {/* Row 1 */}
+  <div className="flex gap-4">
+    {data.personal_info?.linkedin && (
+      <a
+        href={data.personal_info.linkedin}
+        target="_blank"
+        rel="noreferrer"
+        className="flex items-center gap-1 hover:underline"
+      >
+        <Linkedin size={12} />
+        <span>{getShortLink(data.personal_info.linkedin)}</span>
+      </a>
+    )}
 
-          {data.personal_info?.leetcode && (
-            <a
-              href={data.personal_info.leetcode}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 hover:underline"
-            >
-              <LeetCodeIcon className="w-3 h-3 fill-gray-600" />
-              LeetCode
-            </a>
-          )}
+    {data.personal_info?.github && (
+      <a
+        href={data.personal_info.github}
+        target="_blank"
+        rel="noreferrer"
+        className="flex items-center gap-1 hover:underline"
+      >
+        <Github size={12} />
+        <span>{getShortLink(data.personal_info.github)}</span>
+      </a>
+    )}
+  </div>
 
-          {data.personal_info?.website && (
-            <a
-              href={data.personal_info.website}
-              target="_blank"
-              rel="noreferrer"
-              className="flex items-center gap-1 hover:underline"
-            >
-              <PortfolioIcon className="w-3 h-3 fill-gray-600" />
-              Portfolio
-            </a>
-          )}
-        </div>
+  {/* Row 2 */}
+  <div className="flex gap-4">
+    {data.personal_info?.leetcode && (
+      <a
+        href={data.personal_info.leetcode}
+        target="_blank"
+        rel="noreferrer"
+        className="flex items-center gap-1 hover:underline"
+      >
+        <LeetCodeIcon className="w-3 h-3 fill-gray-600" />
+        <span>{getShortLink(data.personal_info.leetcode)}</span>
+      </a>
+    )}
+
+    {data.personal_info?.website && (
+      <a
+        href={data.personal_info.website}
+        target="_blank"
+        rel="noreferrer"
+        className="flex items-center gap-1 hover:underline"
+      >
+        <PortfolioIcon className="w-3 h-3 fill-gray-600" />
+        <span>{getShortLink(data.personal_info.website)}</span>
+      </a>
+    )}
+  </div>
+
+</div>
       </header>
 
       {/* SUMMARY */}
@@ -197,22 +227,34 @@ const MinimalTemplate = ({ data }) => {
               <div className="flex items-center gap-2">
                 <p className="font-semibold">{p.name}</p>
 
-                {p.github && (
-                  <a href={p.github} target="_blank" rel="noreferrer">
-                    <Github size={12} />
-                  </a>
-                )}
+               {p.github && (
+  <a
+    href={p.github}
+    target="_blank"
+    rel="noreferrer"
+    className="flex items-center gap-1 hover:underline text-sm"
+  >
+    <Github size={12} />
+    <span>{getShortLink(p.github)}</span>
+  </a>
+)}
 
-                {p.liveDemo && (
-                  <a href={p.liveDemo} target="_blank" rel="noreferrer">
-                    <ExternalLink size={12} />
-                  </a>
-                )}
+{p.liveDemo && (
+  <a
+    href={p.liveDemo}
+    target="_blank"
+    rel="noreferrer"
+    className="flex items-center gap-1 hover:underline text-sm"
+  >
+    <ExternalLink size={12} />
+    <span>{getShortLink(p.liveDemo)}</span>
+  </a>
+)}
               </div>
 
               <ul className="list-disc pl-5 mt-1 space-y-1">
                 {(p.description || "")
-                  .split(/•|\n/) // 🔥 split by bullet OR newline
+                  .split(/•|\n/) 
                   .map((line) => line.trim())
                   .filter(Boolean)
                   .map((line, idx) => (

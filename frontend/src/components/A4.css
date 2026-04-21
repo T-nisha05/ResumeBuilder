@@ -18,14 +18,15 @@
 
 /* Make this wrapper at least 210mm × 297mm, but let it shrink if content is shorter */
  .a4-wrapper {
-  width: 794px;      /* ✅ exact A4 width */
-  height: 1123px;    /* ✅ exact A4 height */
+  width: 794px;
+  min-height: 1123px;   /* ✅ change from height */
   padding: 40px;
   margin: 0 auto;
   background: #fff;
 
   box-sizing: border-box;
-  overflow: hidden;
+
+  overflow: visible;   /* ✅ REMOVE hidden */
 }
 
 * {

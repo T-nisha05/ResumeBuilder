@@ -12,6 +12,28 @@ const CompactTemplate = ({ data, accentColor }) => {
     });
   };
 
+    const getShortLink = (url) => {
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("linkedin")) {
+      return "linkedin.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("github")) {
+      return "github.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("leetcode")) {
+      return "leetcode.com" + parsed.pathname;
+    }
+
+    return parsed.hostname.replace("www.", "");
+  } catch {
+    return url;
+  }
+};
+
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white text-gray-800 text-sm leading-relaxed">
       {/* HEADER */}
@@ -26,66 +48,87 @@ const CompactTemplate = ({ data, accentColor }) => {
           </div>
 
           {/* RIGHT */}
-          <div className="text-right text-xs text-gray-600 space-y-1">
-            {data.personal_info?.email && (
-              <a
-                href={`mailto:${data.personal_info.email}`}
-                className="flex items-center justify-end gap-1 hover:underline"
-              >
-                <Mail size={12} />
-                {data.personal_info.email}
-              </a>
-            )}
+        {/* RIGHT */}
+<div className="text-xs text-gray-600 flex flex-col items-end gap-2">
 
-            {data.personal_info?.phone && (
-              <div className="flex items-center justify-end gap-1">
-                <Phone size={12} />
-                {data.personal_info.phone}
-              </div>
-            )}
+  {/* CONTACT (single row) */}
+  <div className="flex items-center gap-4">
+    {data.personal_info?.email && (
+      <a
+        href={`mailto:${data.personal_info.email}`}
+        className="flex items-center gap-1 hover:underline"
+      >
+        <Mail size={12} />
+        {data.personal_info.email}
+      </a>
+    )}
 
-            {/* SOCIAL ICONS */}
-            <div className="flex justify-end gap-3 mt-1">
-              {data.personal_info?.linkedin && (
-                <a
-                  href={data.personal_info.linkedin}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Linkedin className="w-4 h-4 text-gray-600 hover:text-black transition" />
-                </a>
-              )}
+    {data.personal_info?.phone && (
+      <div className="flex items-center gap-1">
+        <Phone size={12} />
+        {data.personal_info.phone}
+      </div>
+    )}
+  </div>
 
-              {data.personal_info?.github && (
-                <a
-                  href={data.personal_info.github}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <Github className="w-4 h-4 text-gray-600 hover:text-black transition" />
-                </a>
-              )}
+  {/* SOCIAL LINKS */}
+  <div className="flex flex-col items-end gap-1">
 
-              {data.personal_info?.leetcode && (
-                <a
-                  href={data.personal_info.leetcode}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <LeetCodeIcon className="w-4 h-4 fill-gray-600 hover:fill-black" />
-                </a>
-              )}
+    {/* Row 1 */}
+    <div className="flex gap-3">
+      {data.personal_info?.linkedin && (
+        <a
+          href={data.personal_info.linkedin}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1 hover:underline"
+        >
+          <Linkedin size={12} />
+          <span>{getShortLink(data.personal_info.linkedin)}</span>
+        </a>
+      )}
 
-              {data.personal_info?.website && (
-                <a
-                  href={data.personal_info.website}
-                  target="_blank"
-                  rel="noreferrer"
-                >
-                  <PortfolioIcon className="w-4 h-4 fill-gray-600 hover:fill-black" />
-                </a>
-              )}
-            </div>
+      {data.personal_info?.github && (
+        <a
+          href={data.personal_info.github}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1 hover:underline"
+        >
+          <Github size={12} />
+          <span>{getShortLink(data.personal_info.github)}</span>
+        </a>
+      )}
+    </div>
+
+    {/* Row 2 */}
+    <div className="flex gap-3">
+      {data.personal_info?.leetcode && (
+        <a
+          href={data.personal_info.leetcode}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1 hover:underline"
+        >
+          <LeetCodeIcon className="w-3 h-3 fill-gray-600" />
+          <span>{getShortLink(data.personal_info.leetcode)}</span>
+        </a>
+      )}
+
+      {data.personal_info?.website && (
+        <a
+          href={data.personal_info.website}
+          target="_blank"
+          rel="noreferrer"
+          className="flex items-center gap-1 hover:underline"
+        >
+          <PortfolioIcon className="w-3 h-3 fill-gray-600" />
+          <span>{getShortLink(data.personal_info.website)}</span>
+        </a>
+      )}
+    </div>
+
+  </div>
           </div>
         </div>
       </header>
@@ -109,7 +152,6 @@ const CompactTemplate = ({ data, accentColor }) => {
                 <p className="font-semibold">{edu.institution}</p>
                 <p>{edu.degree}</p>
 
-                {/* ✅ CGPA / Percentage FIX */}
                 {edu.score && (
                   <p className="text-xs text-gray-600">
                     {edu.type === "graduation"
@@ -187,18 +229,29 @@ const CompactTemplate = ({ data, accentColor }) => {
               <div className="flex items-center gap-2">
                 <p className="font-semibold">{p.name}</p>
 
-                {/* ✅ ICONS FIX */}
                 {p.github && (
-                  <a href={p.github} target="_blank" rel="noreferrer">
-                    <Github size={12} />
-                  </a>
-                )}
+  <a
+    href={p.github}
+    target="_blank"
+    rel="noreferrer"
+    className="flex items-center gap-1 hover:underline"
+  >
+    <Github size={12} />
+    <span>{getShortLink(p.github)}</span>
+  </a>
+)}
 
-                {p.liveDemo && (
-                  <a href={p.liveDemo} target="_blank" rel="noreferrer">
-                    <ExternalLink size={12} />
-                  </a>
-                )}
+{p.liveDemo && (
+  <a
+    href={p.liveDemo}
+    target="_blank"
+    rel="noreferrer"
+    className="flex items-center gap-1 hover:underline"
+  >
+    <ExternalLink size={12} />
+    <span>{getShortLink(p.liveDemo)}</span>
+  </a>
+)}
               </div>
 
               <ul className="list-disc pl-5 text-xs mt-1">

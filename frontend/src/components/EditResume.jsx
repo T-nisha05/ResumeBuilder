@@ -21,7 +21,6 @@ import {
 } from "lucide-react";
 import toast from "react-hot-toast";
 import { fixTailwindColors } from "../utils/colors";
-import html2pdf from "html2pdf.js";
 import html2canvas from "html2canvas";
 import { StepProgress } from "../components/StepProgress";
 import {
@@ -640,65 +639,125 @@ const EditResume = () => {
     }
   };
 
-  const downloadPDF = async () => {
-    const element = resumeDownloadRef.current;
-    await document.fonts.ready;
-    if (!element) {
-      toast.error("Failed to generate PDF. Please try again.");
-      return;
-    }
+  // DOWNLOAD IMAGE
+const downloadImage = async () => {
+  const element = resumeDownloadRef.current;
+  if (!element) return;
 
+  try {
     setIsDownloading(true);
-    setDownloadSuccess(false);
-    const toastId = toast.loading("Generating PDF");
 
-    const override = document.createElement("style");
-    override.id = "__pdf_color_override__";
-    override.textContent = `
-      * {
-        color: #000 !important;
-        background-color: #fff !important;
-        border-color: #000 !important;
-      }
-    `;
-    document.head.appendChild(override);
+    const canvas = await html2canvas(element, {
+      scale: 2,
+      useCORS: true,
+      backgroundColor: "#ffffff",
 
-    try {
-      await html2pdf()
-    .set({
-      margin: 0,
-      filename: "resume.pdf",
-      image: { type: "jpeg", quality: 1 },
-          html2canvas: {
-        scale: 1,
-        useCORS: true,
-        backgroundColor: "#fff",
-        width: 794,
-        height: 1123,
+      onclone: (clonedDoc) => {
+        const all = clonedDoc.querySelectorAll("*");
+
+        all.forEach((el) => {
+          const style = clonedDoc.defaultView.getComputedStyle(el);
+
+          // FIX unsupported oklch colors
+          if (style.color.includes("oklch")) {
+            el.style.color = "#000000";
+          }
+
+          if (style.backgroundColor.includes("oklch")) {
+            el.style.backgroundColor = "#ffffff";
+          }
+
+          if (style.borderColor.includes("oklch")) {
+            el.style.borderColor = "#000000";
+          }
+        });
       },
-                jsPDF: {
-        unit: "px",
-        format: [794, 1123],
-        orientation: "portrait",
-      },
-          pagebreak: {
-  mode: ["css"], 
-},
-        })
-        .from(element)
-        .save();
+    });
 
-      toast.success("PDF downloaded successfully!", { id: toastId });
-      setDownloadSuccess(true);
-      setTimeout(() => setDownloadSuccess(false), 3000);
-    } catch (err) {
-      console.error("PDF error:", err);
-      toast.error(`Failed to generate PDF: ${err.message}`, { id: toastId });
-    } finally {
-      document.getElementById("__pdf_color_override__")?.remove();
-      setIsDownloading(false);
-    }
-  };
+    const link = document.createElement("a");
+    link.download = "resume.png";
+    link.href = canvas.toDataURL("image/png");
+    link.click();
+
+    setDownloadSuccess(true);
+    setTimeout(() => setDownloadSuccess(false), 3000);
+
+  } catch (err) {
+    console.error("Image download error:", err);
+  } finally {
+    setIsDownloading(false);
+  }
+};
+
+  // const downloadPDF = async () => {
+  //   const element = resumeDownloadRef.current;
+  //   await document.fonts.ready;
+  //   if (!element) {
+  //     toast.error("Failed to generate PDF. Please try again.");
+  //     return;
+  //   }
+
+  //   setIsDownloading(true);
+  //   setDownloadSuccess(false);
+  //   const toastId = toast.loading("Generating PDF");
+
+  //   const override = document.createElement("style");
+  //   override.id = "__pdf_color_override__";
+  //   override.textContent = `
+  //     * {
+  //       color: #000 !important;
+  //       background-color: #fff !important;
+  //       border-color: #000 !important;
+  //     }
+  //   `;
+  //   document.head.appendChild(override);
+
+  //   try {
+  //    await html2pdf()
+  // .set({
+  //   margin: [0, 0, 0, 0], // ✅ use array format
+
+  //   filename: "resume.pdf",
+
+  //   image: { type: "jpeg", quality: 1 },
+
+  //   html2canvas: {
+  //     scale: 2,  // ⚠️ reduce from 3 → 2 (3 causes cropping issues)
+  //     useCORS: true,
+  //     backgroundColor: "#ffffff",
+
+  //     scrollX: 0,
+  //     scrollY: 0,
+
+  //     windowWidth: 794,
+  //     windowHeight: 1123, // ✅ ADD THIS
+  //   },
+
+  //   jsPDF: {
+  //     unit: "px",
+  //     format: [794, 1123],
+  //     orientation: "portrait",
+  //   },
+  // })
+  // .from(element)
+  // .toPdf()
+  // .get("pdf")
+  // .then((pdf) => {
+  //   pdf.setPage(1);
+  // })
+  // .save();
+
+  //     toast.success("PDF downloaded successfully!", { id: toastId });
+  //     setDownloadSuccess(true);
+  //     setTimeout(() => setDownloadSuccess(false), 3000);
+  //   } catch (err) {
+  //     console.error("PDF error:", err);
+  //     toast.error(`Failed to generate PDF: ${err.message}`, { id: toastId });
+  //   } finally {
+  //     document.getElementById("__pdf_color_override__")?.remove();
+  //     setIsDownloading(false);
+  //   }
+  // };
 
   const updateTheme = (theme) => {
     setResumeData((prev) => ({
@@ -851,7 +910,7 @@ const EditResume = () => {
                 className="preview-container relative"
                 ref={previewContainerRef}
               >
-                <div className={styles.previewInner}>
+              <div className={`${styles.previewInner} overflow-visible`}>
                   <RenderResume
                     key={`preview-${resumeData?.template?.theme}`}
                     templateId={resumeData?.template?.theme || ""}
@@ -878,30 +937,36 @@ const EditResume = () => {
             />
           </div>
         </Modal>
+
         {/* PREVIEW MODAL */}
         <Modal
-          isOpen={openPreviewModal}
-          onClose={() => setOpenPreviewModal(false)}
-          title={resumeData.title}
-          showActionBtn
-          actionBtnText={
-            isDownloading
-              ? "Generating..."
-              : downloadSuccess
-                ? "Downloaded!"
-                : "Download PDF"
-          }
-          actionBtnIcon={
-            isDownloading ? (
-              <Loader2 size={16} className="animate-spin" />
-            ) : downloadSuccess ? (
-              <Check size={16} className="text-white" />
-            ) : (
-              <Download size={16} />
-            )
-          }
-          onActionClick={downloadPDF}
-        >
+  isOpen={openPreviewModal}
+  onClose={() => setOpenPreviewModal(false)}
+  title={resumeData.title}
+  
+  showActionBtn   // ✅ ADD THIS LINE
+
+  actionBtnText={
+    isDownloading
+      ? "Generating..."
+      : downloadSuccess
+        ? "Downloaded!"
+        : "Download Image"
+  }
+
+  actionBtnIcon={
+    isDownloading ? (
+      <Loader2 size={16} className="animate-spin" />
+    ) : downloadSuccess ? (
+      <Check size={16} className="text-white" />
+    ) : (
+      <Download size={16} />
+    )
+  }
+
+  onActionClick={downloadImage}
+>
+
           <div className={styles.modalContent}>
             {/* Completion Badge */}
             <div className="relative">
@@ -914,9 +979,19 @@ const EditResume = () => {
             </div>
 
             {/* Resume Preview */}
-            <div className={styles.pdfPreview}>
-              <div ref={resumeDownloadRef} className="a4-wrapper">
-                <div className="w-full h-full">
+            <div className={`${styles.pdfPreview} overflow-auto`}>
+              <div ref={resumeDownloadRef}>
+  <div
+       style={{
+      width: "794px",
+      minHeight: "1123px",
+      margin: "0 auto",
+      background: "#fff",
+      padding: "0px",   // ⚠️ IMPORTANT: remove padding here
+      boxSizing: "border-box",
+      overflow: "hidden", // ✅ prevents bleed issues
+    }}
+  >
                   <RenderResume
                     key={`pdf-${resumeData?.template?.theme}`}
                     templateId={resumeData?.template?.theme || ""}

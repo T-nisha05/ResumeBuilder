@@ -194,7 +194,7 @@ export const ContactInfoForm = ({ contactInfo, updateSection, errors }) => {
         {/* LINKEDIN */}
         <Input
           label="LinkedIn"
-          placeholder="https://linkedin.com/in/username"
+          placeholder="linkedin.com/in/username"
           value={contactInfo.linkedin || ""}
           onChange={({ target }) => updateSection("linkedin", target.value)}
         />
@@ -202,7 +202,7 @@ export const ContactInfoForm = ({ contactInfo, updateSection, errors }) => {
         {/* GITHUB */}
         <Input
           label="GitHub"
-          placeholder="https://github.com/username"
+          placeholder="github.com/username"
           value={contactInfo.github || ""}
           onChange={({ target }) => updateSection("github", target.value)}
         />
@@ -210,7 +210,7 @@ export const ContactInfoForm = ({ contactInfo, updateSection, errors }) => {
         {/* LEETCODE */}
         <Input
           label="LeetCode"
-          placeholder="https://leetcode.com/username"
+          placeholder="leetcode.com/username"
           value={contactInfo.leetcode || ""}
           onChange={({ target }) => updateSection("leetcode", target.value)}
         />
@@ -218,7 +218,7 @@ export const ContactInfoForm = ({ contactInfo, updateSection, errors }) => {
         {/* PORTFOLIO */}
         <Input
           label="Portfolio / Website"
-          placeholder="https://yourwebsite.com"
+          placeholder="yourwebsite.com"
           value={contactInfo.website || ""}
           onChange={({ target }) => updateSection("website", target.value)}
         />
@@ -725,7 +725,7 @@ Return ONLY JSON:
               {/* GITHUB */}
               <Input
                 label="GitHub Link"
-                placeholder="https://github.com/username/project"
+                placeholder="github.com/username/project"
                 value={project.github || ""}
                 onChange={({ target }) =>
                   updateArrayItem(index, "github", target.value)
@@ -735,7 +735,7 @@ Return ONLY JSON:
               {/* LIVE DEMO */}
               <Input
                 label="Live Demo URL"
-                placeholder="https://yourproject.liveDemo"
+                placeholder="yourproject.vercel.app"
                 value={project.liveDemo || ""}
                 onChange={({ target }) =>
                   updateArrayItem(index, "liveDemo", target.value)

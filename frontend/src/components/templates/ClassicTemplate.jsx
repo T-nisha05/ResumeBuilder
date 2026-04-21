@@ -12,6 +12,28 @@ const ClassicTemplate = ({ data, accentColor }) => {
     });
   };
 
+  const getShortLink = (url) => {
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("linkedin")) {
+      return "linkedin.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("github")) {
+      return "github.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("leetcode")) {
+      return "leetcode.com" + parsed.pathname;
+    }
+
+    return parsed.hostname.replace("www.", "");
+  } catch {
+    return url;
+  }
+};
+
   return (
     <div className="max-w-4xl mx-auto p-8 bg-white text-gray-800">
       {/* HEADER */}
@@ -48,7 +70,58 @@ const ClassicTemplate = ({ data, accentColor }) => {
           </div>
 
           {/* ROW 2 → ICONS ONLY  */}
-          <div className="flex items-center justify-center gap-4 mt-1">
+          <div className="flex flex-wrap items-center justify-center gap-4 mt-1 text-xs text-gray-700">
+
+  {data.personal_info?.linkedin && (
+    <a
+      href={data.personal_info.linkedin}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:underline"
+    >
+      <Linkedin className="size-5" />
+      <span>{getShortLink(data.personal_info.linkedin)}</span>
+    </a>
+  )}
+
+  {data.personal_info?.github && (
+    <a
+      href={data.personal_info.github}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:underline"
+    >
+      <Github className="size-5" />
+      <span>{getShortLink(data.personal_info.github)}</span>
+    </a>
+  )}
+
+  {data.personal_info?.leetcode && (
+    <a
+      href={data.personal_info.leetcode}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:underline"
+    >
+      <LeetCodeIcon className="w-5 h-5 fill-gray-500 hover:fill-black" />
+      <span>{getShortLink(data.personal_info.leetcode)}</span>
+    </a>
+  )}
+
+  {data.personal_info?.website && (
+    <a
+      href={data.personal_info.website}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:underline"
+    >
+      <PortfolioIcon className="w-5 h-5 fill-gray-500 group-hover:fill-black transition" />
+      <span>{getShortLink(data.personal_info.website)}</span>
+    </a>
+  )}
+
+</div>
+          {/* <div className="flex items-center justify-center gap-4 mt-1">
             {data.personal_info?.linkedin && (
               <a
                 href={data.personal_info.linkedin}
@@ -58,9 +131,9 @@ const ClassicTemplate = ({ data, accentColor }) => {
               >
                 <Linkedin className="size-5" />
               </a>
-            )}
+            )} */}
 
-            {data.personal_info?.github && (
+            {/* {data.personal_info?.github && (
               <a
                 href={data.personal_info.github}
                 target="_blank"
@@ -69,10 +142,10 @@ const ClassicTemplate = ({ data, accentColor }) => {
               >
                 <Github className="size-5" />
               </a>
-            )}
+            )} */}
 
             {/* LEETCODE */}
-            {data.personal_info?.leetcode && (
+            {/* {data.personal_info?.leetcode && (
               <a
                 href={data.personal_info.leetcode}
                 target="_blank"
@@ -81,10 +154,10 @@ const ClassicTemplate = ({ data, accentColor }) => {
               >
                 <LeetCodeIcon className="w-5 h-5 fill-gray-500 hover:fill-black" />
               </a>
-            )}
+            )} */}
 
             {/* PORTFOLIO */}
-            {data.personal_info?.website && (
+            {/* {data.personal_info?.website && (
               <a
                 href={data.personal_info.website}
                 target="_blank"
@@ -94,8 +167,8 @@ const ClassicTemplate = ({ data, accentColor }) => {
                 <PortfolioIcon className="w-5 h-5 fill-gray-500 group-hover:fill-black transition" />
               </a>
             )}
-          </div>
-        </div>
+          </div> */}
+        </div> 
       </header>
 
       {/* OBJECTIVE */}
@@ -125,41 +198,45 @@ const ClassicTemplate = ({ data, accentColor }) => {
           {edu.type === "graduation" && (
             <>
               <p className="font-bold">{edu.degree}</p>
-              <div className="flex justify-between items-start text-sm text-gray-700">
-  <span className="font-medium">{edu.institution}</span>
+              <div className="flex justify-between items-start text-sm text-gray-700 gap-2">
+  <span className="font-medium min-w-0 break-words">
+  {edu.institution}
+</span>
   <span className="text-gray-600 whitespace-nowrap"></span>
-  <span>— {edu.year || "Present"}</span>
+   <span className="whitespace-nowrap ml-2">— {edu.year || "Present"}</span>
 </div>
               <p>CGPA: {edu.score}</p>
             </>
           )}
 
           {/* CLASS 12 */}
-          {edu.type === "class12" && (
+{edu.type === "Class XII" && (
   <>
     <p className="font-bold">
       Class XII {edu.degree && `(${edu.degree})`}
     </p>
-    <div className="flex justify-between items-start text-sm text-gray-700">
-  <span className="font-medium">{edu.institution}</span>
-  <span className="text-gray-600 whitespace-nowrap"></span>
-  <span>— {edu.year}</span>
-</div>
+    <div className="flex justify-between items-start text-sm text-gray-700 gap-2">
+      <span className="font-medium min-w-0 break-words">
+  {edu.institution}
+</span>
+       <span className="whitespace-nowrap ml-2">— {edu.year}</span>
+    </div>
     <p>Percentage: {edu.score}</p>
   </>
 )}
 
-          {/* CLASS 10 */}
-          {edu.type === "class10" && (
+{/* CLASS 10 */}
+{edu.type === "Class X" && (
   <>
     <p className="font-bold">
       Class X {edu.degree && `(${edu.degree})`}
     </p>
-   <div className="flex justify-between items-start text-sm text-gray-700">
-  <span className="font-medium">{edu.institution}</span>
-  <span className="text-gray-600 whitespace-nowrap"></span>
-  <span>— {edu.year}</span>
-</div>
+   <div className="flex justify-between items-start text-sm text-gray-700 gap-2">
+      <span className="font-medium min-w-0 break-words">
+  {edu.institution}
+</span>
+       <span className="whitespace-nowrap ml-2">— {edu.year}</span>
+    </div>
     <p>Percentage: {edu.score}</p>
   </>
 )}
@@ -235,15 +312,17 @@ const ClassicTemplate = ({ data, accentColor }) => {
               <h3 className="font-medium">{p.name}</h3>
 
               {p.github && (
-                <a href={p.github} target="_blank" rel="noopener noreferrer">
-                  <Github className="size-4 text-gray-700 hover:text-black" />
-                </a>
-              )}
+      <div className="flex items-center gap-1">
+        <Github className="size-4" />
+        <span>{getShortLink(p.github)}</span>
+      </div>
+    )}
 
-              {p.liveDemo && (
-                <a href={p.liveDemo} target="_blank" rel="noopener noreferrer">
-                  <ExternalLink className="size-4 text-gray-700 hover:text-black" />
-                </a>
+    {p.liveDemo && (
+      <div className="flex items-center gap-1">
+        <ExternalLink className="size-4" />
+        <span>{getShortLink(p.liveDemo)}</span>
+      </div>
               )}
             </div>
 

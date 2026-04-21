@@ -12,6 +12,28 @@ const ModernTemplate = ({ data }) => {
     });
   };
 
+  const getShortLink = (url) => {
+  try {
+    const parsed = new URL(url);
+
+    if (parsed.hostname.includes("linkedin")) {
+      return "linkedin.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("github")) {
+      return "github.com" + parsed.pathname;
+    }
+
+    if (parsed.hostname.includes("leetcode")) {
+      return "leetcode.com" + parsed.pathname;
+    }
+
+    return parsed.hostname.replace("www.", "");
+  } catch {
+    return url;
+  }
+};
+
   return (
     <div className="max-w-4xl mx-auto bg-white p-8 text-gray-800">
 
@@ -33,49 +55,78 @@ const ModernTemplate = ({ data }) => {
         )}
 
         {/* CONTACT ROW */}
-        <div className="flex flex-wrap gap-4 mt-3 text-sm text-gray-600 items-center">
+        <div className="flex flex-wrap gap-3 mt-3 text-sm text-gray-600 items-center">
 
-          {data.personal_info?.phone && (
-            <span className="flex items-center gap-1">
-              <Phone size={14} />
-              {data.personal_info.phone}
-            </span>
-          )}
+  {data.personal_info?.phone && (
+    <span className="flex items-center gap-1">
+      <Phone size={14} />
+      {data.personal_info.phone}
+    </span>
+  )}
 
-          {data.personal_info?.email && (
-            <a
-              href={`mailto:${data.personal_info.email}`}
-              className="flex items-center gap-1 hover:text-blue-600"
-            >
-              <Mail size={14} />
-              {data.personal_info.email}
-            </a>
-          )}
+  {data.personal_info?.email && (
+    <a
+      href={`mailto:${data.personal_info.email}`}
+      className="flex items-center gap-1 hover:text-blue-600"
+    >
+      <Mail size={14} />
+      {data.personal_info.email}
+    </a>
+  )}
 
-          {data.personal_info?.linkedin && (
-            <a href={data.personal_info.linkedin} target="_blank" rel="noreferrer">
-              <Linkedin className="hover:text-blue-600" size={16} />
-            </a>
-          )}
+  {/* LINKEDIN */}
+  {data.personal_info?.linkedin && (
+    <a
+      href={data.personal_info.linkedin}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:text-blue-600"
+    >
+      <Linkedin size={16} />
+      <span>{getShortLink(data.personal_info.linkedin)}</span>
+    </a>
+  )}
 
-          {data.personal_info?.github && (
-            <a href={data.personal_info.github} target="_blank" rel="noreferrer">
-              <Github className="hover:text-blue-600" size={16} />
-            </a>
-          )}
+  {/* GITHUB */}
+  {data.personal_info?.github && (
+    <a
+      href={data.personal_info.github}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:text-blue-600"
+    >
+      <Github size={16} />
+      <span>{getShortLink(data.personal_info.github)}</span>
+    </a>
+  )}
 
-          {data.personal_info?.leetcode && (
-            <a href={data.personal_info.leetcode} target="_blank" rel="noreferrer">
-              <LeetCodeIcon className="w-4 h-4 fill-gray-600 hover:fill-blue-600" />
-            </a>
-          )}
+  {/* LEETCODE */}
+  {data.personal_info?.leetcode && (
+    <a
+      href={data.personal_info.leetcode}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:text-blue-600"
+    >
+      <LeetCodeIcon className="w-4 h-4 fill-gray-600" />
+      <span>{getShortLink(data.personal_info.leetcode)}</span>
+    </a>
+  )}
 
-          {data.personal_info?.website && (
-            <a href={data.personal_info.website} target="_blank" rel="noreferrer">
-              <PortfolioIcon className="w-4 h-4 fill-gray-600 hover:fill-blue-600" />
-            </a>
-          )}
-        </div>
+  {/* PORTFOLIO */}
+  {data.personal_info?.website && (
+    <a
+      href={data.personal_info.website}
+      target="_blank"
+      rel="noreferrer"
+      className="flex items-center gap-1 hover:text-blue-600"
+    >
+      <PortfolioIcon className="w-4 h-4 fill-gray-600" />
+      <span>{getShortLink(data.personal_info.website)}</span>
+    </a>
+  )}
+
+</div>
       </header>
 
       {/* SKILLS */}
@@ -155,18 +206,21 @@ const ModernTemplate = ({ data }) => {
                   )}
                 </div>
 
-                <div className="flex gap-2">
-                  {p.github && (
-                    <a href={p.github} target="_blank" rel="noreferrer">
-                      <Github size={14} />
-                    </a>
-                  )}
-                  {p.liveDemo && (
-                    <a href={p.liveDemo} target="_blank" rel="noreferrer">
-                      <ExternalLink size={14} />
-                    </a>
-                  )}
-                </div>
+               <div className="flex flex-wrap gap-2 text-xs text-gray-600">
+  {p.github && (
+    <a href={p.github} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-blue-600">
+      <Github size={14} />
+      <span>{getShortLink(p.github)}</span>
+    </a>
+  )}
+
+  {p.liveDemo && (
+    <a href={p.liveDemo} target="_blank" rel="noreferrer" className="flex items-center gap-1 hover:text-blue-600">
+      <ExternalLink size={14} />
+      <span>{getShortLink(p.liveDemo)}</span>
+    </a>
+  )}
+</div>
               </div>
 
               <ul className="list-disc pl-5 mt-1 space-y-1 text-sm">
