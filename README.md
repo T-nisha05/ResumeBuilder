@@ -91,6 +91,7 @@ MongoDB Atlas Database
         ↓
 Gemini AI API
 ````
+---
 
 ## 🤖 AI Integration (Gemini API)
 
@@ -181,18 +182,24 @@ npm run dev
 - Production-level environment handling  
 - AI-based UI automation (skills categorization)
 
+---
+
 ## 🚀 Future Enhancements
 
 - AI resume scoring (ATS match score)  
 - Drag & drop editor  
 - PDF export improvements  
 - Resume sharing links  
-- Smart job-role templates  
+- Smart job-role templates
+
+---
 
 ## 👨‍💻 Author
 
 **Tanisha Pandya**  
 GitHub: [T-nisha05](https://github.com/T-nisha05)
+
+---
 
 ## ⭐ Project Status
 
