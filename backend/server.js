@@ -112,17 +112,18 @@
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
-dotenv.config({ path: "./.env" });
+import path from "path";
+import { fileURLToPath } from "url";
+
 import { connect_db } from "./config/db.js";
 import userRouter from "./routes/userRouter.js";
 import resumeRoutes from "./routes/resumeRoutes.js";
 import aiRoutes from "./routes/aiRoutes.js";
-import path from "path";
-import { fileURLToPath } from "url";
 
-console.log("API KEY:", process.env.GEMINI_API_KEY);
-
+// Load environment variables (ONLY ONCE)
 dotenv.config();
+
+console.log("Server starting...");
 
 const app = express();
 const aiCache = new Map();
@@ -131,34 +132,45 @@ const aiCache = new Map();
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
 
+// =======================
 // MIDDLEWARE
+// =======================
 app.use(
   cors({
-    origin: "*",
-  }),
+    origin: process.env.CLIENT_URL || "*",
+    credentials: true,
+  })
 );
+
 app.use(express.json());
 
-// CONNECT DATABASE
+// =======================
+// DATABASE CONNECTION
+// =======================
 connect_db();
 
+// =======================
 // ROUTES
+// =======================
 app.use("/api/auth", userRouter);
 app.use("/api/resumes", resumeRoutes);
 app.use("/api/ai", aiRoutes);
 
-// STATIC UPLOADS
+// =======================
+// STATIC FILES (UPLOADS)
+// =======================
 app.use(
   "/uploads",
   express.static(path.join(__dirname, "uploads"), {
     setHeaders: (res) => {
       res.set("Access-Control-Allow-Origin", "*");
     },
-  }),
+  })
 );
 
-
-// GEMINI CALL WITH RETRY
+// =======================
+// GEMINI AI FUNCTION
+// =======================
 const callGemini = async (prompt, retries = 2) => {
   try {
     const response = await fetch(
@@ -176,7 +188,7 @@ const callGemini = async (prompt, retries = 2) => {
 
     const data = await response.json();
 
-    // 🚨 handle errors
+    // Retry trigger
     if (
       data?.error?.code === 429 ||
       data?.error?.message?.includes("high demand")
@@ -185,17 +197,16 @@ const callGemini = async (prompt, retries = 2) => {
     }
 
     return data;
-
   } catch (err) {
     if (retries > 0) {
-      console.log("🔁 Retrying...", retries);
+      console.log("🔁 Retrying AI call...", retries);
 
       await new Promise((res) => setTimeout(res, 1500));
 
       return callGemini(prompt, retries - 1);
     }
 
-    // ✅ FINAL fallback (no crash)
+    // fallback response
     return {
       candidates: [
         {
@@ -206,7 +217,7 @@ const callGemini = async (prompt, retries = 2) => {
                   {
                     level: "AI",
                     description:
-                      "• Unable to generate AI content right now\n• Please try again in a few seconds",
+                      "• AI service temporarily unavailable\n• Please try again later",
                   },
                 ]),
               },
@@ -218,64 +229,33 @@ const callGemini = async (prompt, retries = 2) => {
   }
 };
 
-
+// =======================
 // AI ROUTE
+// =======================
 app.post("/generate-summary", async (req, res) => {
   try {
-    console.log("API HIT");
-
     const { prompt } = req.body;
-    const cacheKey = prompt;
 
-if (aiCache.has(cacheKey)) {
-  console.log("⚡ CACHE HIT");
-
-  return res.json({
-    success: true,
-    data: aiCache.get(cacheKey),
-  });
-}
-
-    // const response = await fetch(
-    //   `https://generativelanguage.googleapis.com/v1/models/gemini-2.5-flash:generateContent?key=${process.env.GEMINI_API_KEY}`,
-    //   {
-    //     method: "POST",
-    //     headers: {
-    //       "Content-Type": "application/json",
-    //     },
-    //     body: JSON.stringify({
-    //       contents: [
-    //         {
-    //           parts: [{ text: prompt }],
-    //         },
-    //       ],
-    //     }),
-    //   },
-    // );
-
-    // const data = await response.json();
-
-    const data = await callGemini(prompt);
-
-    console.log("FULL GEMINI RESPONSE:", JSON.stringify(data, null, 2));
-
-    if (data?.error) {
-      console.error("❌ GEMINI ERROR:", data.error.message);
-
-      if (data.error.code === 429) {
-        return res.json({
-          success: false,
-          error: "AI is busy or limit reached. Try again later.",
-          data: [],
-        });
-      }
-
-      return res.json({
+    if (!prompt) {
+      return res.status(400).json({
         success: false,
-        error: data.error.message,
-        data: [],
+        error: "Prompt is required",
       });
     }
+
+    const cacheKey = prompt;
+
+    // CACHE
+    if (aiCache.has(cacheKey)) {
+      console.log("⚡ Cache hit");
+
+      return res.json({
+        success: true,
+        data: aiCache.get(cacheKey),
+      });
+    }
+
+    const data = await callGemini(prompt);
 
     const text =
       data?.candidates?.[0]?.content?.parts
@@ -291,7 +271,7 @@ if (aiCache.has(cacheKey)) {
       return res.json({ success: true, data: [] });
     }
 
-    let parsed = [];
+    let parsed;
 
     try {
       parsed = JSON.parse(cleanText);
@@ -300,103 +280,48 @@ if (aiCache.has(cacheKey)) {
         level: item.level || item.experience_level || "AI",
         description: item.description || item.summary || "",
       }));
-    } catch {
+    } catch (err) {
       parsed = [
         {
           level: "AI",
-          description: cleanText
-            .replace(/•/g, "\n• ")
-            .replace(/^\n/, "")
-            .trim(),
+          description: cleanText,
         },
       ];
     }
 
+    // store in cache
+    aiCache.set(cacheKey, parsed);
+
     res.json({ success: true, data: parsed });
   } catch (error) {
-    console.error("❌ AI ERROR:", error);
-    res.status(500).json({ success: false });
+    console.error("❌ AI ERROR:", error.message);
+    res.status(500).json({
+      success: false,
+      error: "Internal server error",
+    });
   }
 });
 
-//     if (data?.error) {
-//       console.error("❌ GEMINI ERROR:", data.error.message);
-
-//       return res.json({
-//         success: false,
-//         error: data.error.message,
-//         data: [],
-//       });
-//     }
-//     if (data?.error?.code === 429) {
-//       return res.json({
-//         success: false,
-//         error: "Daily AI limit reached. Try again later.",
-//       });
-//     }
-//     const text = data?.candidates?.[0]?.content?.parts?.[0]?.text || "";
-
-//     console.log("FULL GEMINI RESPONSE:", JSON.stringify(data, null, 2));
-
-//     const cleanText = text
-//       .replace(/```json/g, "")
-//       .replace(/```/g, "")
-//       .trim();
-
-//     let parsed = [];
-
-//     if (!cleanText) {
-//       console.error("❌ EMPTY AI RESPONSE");
-//       return res.json({ success: true, data: [] });
-//     }
-
-//     try {
-//       parsed = JSON.parse(cleanText);
-
-// // normalize keys
-// parsed = parsed.map((item) => ({
-//   level: item.level || item.experience_level || "AI",
-//   description: item.description || item.summary || "",
-// }));
-//     } catch (err) {
-//       console.error("❌ JSON PARSE FAILED");
-//       console.log("RAW AI TEXT:", cleanText);
-
-//       // fallback: convert plain text into bullets
-//       parsed = [
-//         {
-//           level: "AI",
-//           description: cleanText
-//             .replace(/•/g, "\n• ")
-//             .replace(/^\n/, "")
-//             .trim(),
-//         },
-//       ];
-//     }
-
-//     res.json({ success: true, data: parsed });
-//   } catch (error) {
-//     console.error("❌ AI ERROR:", error);
-//     res.status(500).json({ success: false });
-//   }
-// });
-
+// =======================
 // TEST ROUTE
+// =======================
 app.get("/test-ai", (req, res) => {
-  console.log("TEST HIT");
   res.send("AI route working");
 });
 
+// =======================
 // GLOBAL ERROR HANDLER
+// =======================
 app.use((err, req, res, next) => {
   console.error("💥 GLOBAL ERROR:", err);
-  res.status(500).json({ error: err.message });
+  res.status(500).json({ error: "Something went wrong" });
 });
 
-// PORT
-const PORT = 40000;
+// =======================
+// START SERVER
+// =======================
+const PORT = process.env.PORT || 4000;
 
 app.listen(PORT, () => {
-  console.log(`🚀 Server Started on http://localhost:${PORT}`);
+  console.log(`🚀 Server running on port ${PORT}`);
 });
-
