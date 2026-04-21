@@ -92,22 +92,24 @@ MongoDB Atlas Database
 Gemini AI API
 ````
 
-🤖 AI Integration (Gemini API)
+## 🤖 AI Integration (Gemini API)
 
-AI-powered resume summary generation
-AI-based skills categorization
-Retry mechanism for rate limits (429 handling)
-Cached responses for performance optimization
-Safe fallback responses when API fails
+- AI-powered resume summary generation  
+- AI-based skills categorization  
+- Retry mechanism for rate limits (429 handling)  
+- Cached responses for performance optimization  
+- Safe fallback responses when API fails  
 
-⚙️ Tech Stack
+---
 
-Frontend: React, Vite, Context API
-Backend: Node.js, Express.js
-Database: MongoDB Atlas
-Authentication: JWT
-AI: Google Gemini API
-Deployment: Render
+## ⚙️ Tech Stack
+
+- Frontend: React, Vite, Context API  
+- Backend: Node.js, Express.js  
+- Database: MongoDB Atlas  
+- Authentication: JWT  
+- AI: Google Gemini API  
+- Deployment: Render  
 
 ````
 🗂 Database Schema (MongoDB)
@@ -151,44 +153,46 @@ npm install
 npm run dev
 ````
 
-🔗 API Endpoints
+## 🔗 API Endpoints
 
-Method	Endpoint	Description
-POST	/api/auth/register	User registration
-POST	/api/auth/login	User login
-POST	/api/ai/generate-summary	AI resume summary
-POST	/api/ai/skills	AI skill categorization
-GET	/api/resumes	Fetch resumes
-POST	/api/resumes	Create resume
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | /api/auth/register | User registration |
+| POST | /api/auth/login | User login |
+| POST | /api/ai/generate-summary | AI resume summary |
+| POST | /api/ai/skills | AI skill categorization |
+| GET | /api/resumes | Fetch resumes |
+| POST | /api/resumes | Create resume |
 
-💡 Key Learnings
 
-Full-stack deployment using Render
-AI integration using Gemini API
-JWT authentication flow
-MongoDB schema design
-Production-level environment handling
-AI-based UI automation (skills categorization)
+## 💡 Key Learnings
 
-🚀 Future Enhancements
+- Full-stack deployment using Render  
+- AI integration using Gemini API  
+- JWT authentication flow  
+- MongoDB schema design  
+- Production-level environment handling  
+- AI-based UI automation (skills categorization)
 
-AI resume scoring (ATS match score)
-Drag & drop editor
-PDF export improvements
-Resume sharing links
-Smart job-role templates
+## 🚀 Future Enhancements
 
-👨‍💻 Author
+- AI resume scoring (ATS match score)  
+- Drag & drop editor  
+- PDF export improvements  
+- Resume sharing links  
+- Smart job-role templates  
 
-Tanisha Pandya
-GitHub: T-nisha05
+## 👨‍💻 Author
 
-⭐ Project Status
+**Tanisha Pandya**  
+GitHub: [T-nisha05](https://github.com/T-nisha05)
 
-✔ Fully deployed
-✔ Production ready
-✔ AI integrated full-stack system
-✔ Internship / Portfolio ready
+## ⭐ Project Status
+
+- ✔ Fully deployed  
+- ✔ Production ready  
+- ✔ AI integrated full-stack system  
+- ✔ Internship / Portfolio ready  
 
 🏁 Final Note
 This project demonstrates real-world full-stack engineering skills including API development, authentication systems, database design, and AI integration with practical automation features like AI-based skill categorization.
