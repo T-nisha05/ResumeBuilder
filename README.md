@@ -171,7 +171,6 @@ MONGO_URI=your_mongodb_connection_string
 JWT_SECRET=your_jwt_secret_key
 GEMINI_API_KEY=your_google_gemini_api_key
 CLIENT_URL=https://your-frontend-url.onrender.com
-PORT=4000
 ```
 ---
 
