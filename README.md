@@ -162,6 +162,19 @@ npm run dev
 ````
 ---
 
+## 🔐 Environment Variables
+
+Create a `.env` file in the **backend** folder and add the following:
+
+```env
+MONGO_URI=your_mongodb_connection_string
+JWT_SECRET=your_jwt_secret_key
+GEMINI_API_KEY=your_google_gemini_api_key
+CLIENT_URL=https://your-frontend-url.onrender.com
+PORT=4000
+```
+---
+
 ## 🔗 API Endpoints
 
 | Method | Endpoint | Description |
