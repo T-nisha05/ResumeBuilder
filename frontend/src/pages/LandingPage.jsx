@@ -431,7 +431,7 @@ const LandingPage = () => {
                   icon: <Download className={landingPageStyles.featureIcon} />,
                   title: "Instant Export",
                   description:
-                    "Download high-quality PDFs instantly with perfect formatting",
+                    "Instant Export Download your resume instantly as a high-quality Image",
                   gradient: landingPageStyles.featureIconOrange,
                   bg: landingPageStyles.featureCardOrange,
                 },

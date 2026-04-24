@@ -202,11 +202,10 @@ app.post("/generate-summary", async (req, res) => {
   }
 });
 
-// =======================
-// TEST ROUTE
-// =======================
-app.get("/test-ai", (req, res) => {
-  res.send("AI route working");
+app.get("/", (req, res) => {
+  res.json({
+    message: "Resume Builder API is running 🚀",
+  });
 });
 
 // =======================
