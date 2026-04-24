@@ -12,6 +12,9 @@ const SignUp = ({ setCurrentPage }) => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
 
+  console.log("API URL:", import.meta.env.VITE_API_URL);
+  console.log(import.meta.env);
+
   const [errors, setErrors] = useState({
     fullName: "",
     email: "",
@@ -44,7 +47,7 @@ const SignUp = ({ setCurrentPage }) => {
 
     try {
       const response = await axiosInstance.post(API_PATHS.AUTH.REGISTER, {
-        name: fullName,
+        fullName: fullName,
         email,
         password,
       });
