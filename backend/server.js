@@ -1,5 +1,3 @@
-
-
 import express from "express";
 import cors from "cors";
 import dotenv from "dotenv";
@@ -26,9 +24,21 @@ const __dirname = path.dirname(__filename);
 // =======================
 // MIDDLEWARE
 // =======================
+
+const allowedOrigins = [
+  "http://localhost:5173",
+  "https://resumebuilder-1-uywr.onrender.com",
+];
+
 app.use(
   cors({
-    origin: "http://localhost:5173",
+    origin: function (origin, callback) {
+      if (!origin || allowedOrigins.includes(origin)) {
+        callback(null, true);
+      } else {
+        callback(new Error("Not allowed by CORS"));
+      }
+    },
   })
 );
 
